@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+  <persistence-unit name="PedidosWebBDCPU" transaction-type="JTA">
+    <jta-data-source>jdbc/pedido</jta-data-source>
+    <class>com.asi.pedidoweb.modelo.Cliente</class>
+    <class>com.asi.pedidoweb.modelo.Configuracion</class>
+    <class>com.asi.pedidoweb.modelo.Estado</class>
+    <class>com.asi.pedidoweb.modelo.Grupoproducto</class>
+    <class>com.asi.pedidoweb.modelo.Marcaproducto</class>
+    <class>com.asi.pedidoweb.modelo.Medida</class>
+    <class>com.asi.pedidoweb.modelo.Pedidodetalle</class>
+    <class>com.asi.pedidoweb.modelo.Pedidoencabezado</class>
+    <class>com.asi.pedidoweb.modelo.Perfil</class>
+    <class>com.asi.pedidoweb.modelo.Producto</class>
+    <class>com.asi.pedidoweb.modelo.Sucursal</class>
+    <class>com.asi.pedidoweb.modelo.Tipoproducto</class>
+    <class>com.asi.pedidoweb.modelo.Usuario</class>
+    <class>com.asi.pedidoweb.modelo.Vwproductos</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+      <properties>
+      <property name="eclipselink.persistence-context.flush-mode" value="COMMIT"/>
+      <property name="eclipselink.target-server" value="SunAS9"/>
+      <property name="eclipselink.logging.level" value="FINE"/>
+      <property name="eclipselink.logging.parameters" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>

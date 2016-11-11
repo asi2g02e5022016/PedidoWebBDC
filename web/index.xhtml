@@ -10,7 +10,7 @@
     <h:body>
         <h:form>            
     <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="login">
-        <p:graphicImage name="/demo/images/login.png" />
+        <p:graphicImage value="/image/loggin.png" />
     </h:outputLink>
  
     <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
@@ -23,7 +23,7 @@
             <h:outputLabel for="password" value="Password:" />
             <p:password id="password"  required="true" label="password" />
  
-            <f:facet name="footer">
+               <f:facet name="footer">
                 <p:commandButton value="Login" update="growl" 
                                  oncomplete="handleLoginRequest(xhr, status, args)" />
             </f:facet>  

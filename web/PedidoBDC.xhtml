@@ -5,6 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
+        
         <title>Pedidos Clientes</title>
     </h:head>
     <h:body>
@@ -12,8 +13,9 @@
 
             <p:menubar>
                 <p:menuitem value="Limpiar" update="forprincipal" 
+                            action="#{pedidoWEb.purebaStrin()}"
                             icon="ui-icon-plus" />
-                <p:menuitem value="Monitor" 
+                <p:menuitem value="Monitor" action="#{pedidoWEb.purebaEnviarcorreo()}"
                             icon=" ui-icon-search" />
             </p:menubar>
             <h:panelGrid columns="2" width="100%">
