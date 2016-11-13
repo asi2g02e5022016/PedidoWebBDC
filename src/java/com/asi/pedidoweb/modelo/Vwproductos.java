@@ -7,9 +7,11 @@ package com.asi.pedidoweb.modelo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -27,69 +29,52 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Vwproductos.findAll", query = "SELECT v FROM Vwproductos v")})
 public class Vwproductos implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+ private static final long serialVersionUID = 1L;
+    @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "idproducto")
-    private int idproducto;
+    private Integer idproducto;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
     @Column(name = "producto")
     private String producto;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idmarcaproducto")
     private int idmarcaproducto;
-    @Size(max = 50)
     @Column(name = "marcaproducto")
     private String marcaproducto;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idgrupoproducto")
     private int idgrupoproducto;
-    @Size(max = 50)
     @Column(name = "grupoproducto")
     private String grupoproducto;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idtipoproducto")
     private int idtipoproducto;
-    @Size(max = 100)
     @Column(name = "tipoproducto")
     private String tipoproducto;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "idmedida")
     private int idmedida;
-    @Size(max = 2)
     @Column(name = "medida")
     private String medida;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "fechacreacion")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechacreacion;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
     @Column(name = "idusuario")
     private String idusuario;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "activo")
-    private boolean activo;
+    private int activo;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "preciocompra")
     private double preciocompra;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "precioventa")
     private double precioventa;
     @Basic(optional = false)
-    @NotNull
     @Column(name = "vendible")
     private boolean vendible;
     @Column(name = "excento")
@@ -98,13 +83,7 @@ public class Vwproductos implements Serializable {
     public Vwproductos() {
     }
 
-    public int getIdproducto() {
-        return idproducto;
-    }
 
-    public void setIdproducto(int idproducto) {
-        this.idproducto = idproducto;
-    }
 
     public String getProducto() {
         return producto;
@@ -194,13 +173,15 @@ public class Vwproductos implements Serializable {
         this.idusuario = idusuario;
     }
 
-    public boolean getActivo() {
+    public int getActivo() {
         return activo;
     }
 
-    public void setActivo(boolean activo) {
+    public void setActivo(int activo) {
         this.activo = activo;
     }
+
+ 
 
     public double getPreciocompra() {
         return preciocompra;
@@ -233,5 +214,45 @@ public class Vwproductos implements Serializable {
     public void setExcento(Boolean excento) {
         this.excento = excento;
     }
+
+    public Integer getIdproducto() {
+        return idproducto;
+    }
+
+    public void setIdproducto(Integer idproducto) {
+        this.idproducto = idproducto;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 41 * hash + Objects.hashCode(this.idproducto);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Vwproductos other = (Vwproductos) obj;
+        if (!Objects.equals(this.idproducto, other.idproducto)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Vwproductos{" + "idproducto=" + idproducto + '}';
+    }
+    
+    
     
 }
