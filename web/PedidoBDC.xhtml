@@ -19,7 +19,8 @@
                <p:menuitem value="Guardar" 
                             icon="ui-icon-disk" />
                 <p:menuitem value="Monitor"
-                            action="#{pedidoWEb.buscarProducto()}"
+                            action="#{pedidoWEb.mostrarProducto()}"
+                            
                             icon=" ui-icon-search" />
             </p:menubar>
                     <h:panelGrid columns="6" width="80%">
@@ -49,6 +50,11 @@
                         <p:inputText readonly="true"  >
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                         </p:inputText>  
+                           <h:outputLabel  value="Sucursal:  "  />
+                        <p:selectOneMenu id="listSucursal"  value ="#{pedidoWEb.codsucursal}" >
+                            <f:selectItems value="#{pedidoWEb.lstSucursal}"
+                                           var="suc" itemLabel="#{suc.sucursal}" itemValue="#{suc.idsucursal}"/>                                       
+                        </p:selectOneMenu> 
                     </h:panelGrid>
             <h:panelGrid columns="8" width="100%"  style="background: #C0BEBE">
                           <h:outputLabel  value="Cantidad "  />
@@ -96,36 +102,25 @@
                         <p:menuitem value="Limpiar" 
                                     icon="ui-icon-plus" />
                         <p:menuitem id="idBuscarPro" value="Buscar" update="tablaProdd"
-                                    
+                                    action="#{pedidoWEb.buscarProducto()}"
                                     icon=" ui-icon-search" > 
                         </p:menuitem>
                     </p:menubar>
                 </h:panelGrid>
-                <h:panelGrid columns="2" width="80%">
-                    <h:outputLabel  value="Producto "  />
-                    <p:inputText    />
-                </h:panelGrid>
                 <h:panelGrid >
                     <p:dataTable id="tablaProdd" 
                                  emptyMessage=""
-                                 var="dpro"                                   
+                                 value="#{pedidoWEb.lstProducto}"
+                                 var="dpro"    
+                                 rowKey="#{dpro.idproducto}"
                                  selectionMode="single" rows="10"  >                        
                         <p:ajax event="rowSelect" update="forprincipal" process="@all"  
                            />
-                        <p:column  headerText="descripcion">
-                            <h:outputText   />
+                        <p:column  headerText="Producto">
+                            <h:outputText  value="#{ dpro.producto}" />
                         </p:column>
-                        <p:column headerText="medida" >
-                            <h:outputText  />
-                        </p:column>
-                        <p:column headerText="tipo" >
-                            <h:outputText  />
-                        </p:column>
-                        <p:column headerText="grupo" >
-                            <h:outputText  />
-                            <p:column headerText="marca"  >
-                                <h:outputText  />
-                            </p:column>
+                         <p:column  headerText="Descripcion">
+                            <h:outputText  value="#{ dpro.producto}" />
                         </p:column>
                     </p:dataTable>
                 </h:panelGrid>

@@ -26,6 +26,7 @@ public class SessionUsr implements Serializable {
     private Sucursal sucursal;
     private Perfil perfil;
     private String token;
+     private String userCliente;
     private BigInteger codPant;
     private Date fecha = new Date();
     private String url;
@@ -88,6 +89,14 @@ public class SessionUsr implements Serializable {
 
     public void setPerfil(Perfil perfil) {
         this.perfil = perfil;
+    }
+
+    public String getUserCliente() {
+        return userCliente;
+    }
+
+    public void setUserCliente(String userCliente) {
+        this.userCliente = userCliente;
     }
 
 

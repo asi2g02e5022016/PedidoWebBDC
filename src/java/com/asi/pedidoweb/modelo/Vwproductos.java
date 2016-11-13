@@ -76,7 +76,7 @@ public class Vwproductos implements Serializable {
     private double precioventa;
     @Basic(optional = false)
     @Column(name = "vendible")
-    private boolean vendible;
+    private Integer vendible;
     @Column(name = "excento")
     private Boolean excento;
 
@@ -199,13 +199,15 @@ public class Vwproductos implements Serializable {
         this.precioventa = precioventa;
     }
 
-    public boolean getVendible() {
+    public Integer getVendible() {
         return vendible;
     }
 
-    public void setVendible(boolean vendible) {
+    public void setVendible(Integer vendible) {
         this.vendible = vendible;
     }
+
+
 
     public Boolean getExcento() {
         return excento;

@@ -13,8 +13,7 @@ import javax.ejb.Local;
  */
 @Local
 public interface ConsumerWSLocal {
-    public String consumirWebservices(String usr,
-            String metodo, String recurso, String jsonDatos,String URLBase) 
+    public String consumirWebservices(String usr, String jsonDatos,String URLBase) 
         throws Exception;
     
 }

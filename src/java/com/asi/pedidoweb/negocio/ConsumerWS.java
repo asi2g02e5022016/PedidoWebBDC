@@ -36,10 +36,18 @@ public class ConsumerWS implements ConsumerWSLocal {
     private EntityManager em;
 
 
-
+    /**
+     * 
+     * @param usr
+     * @param metodo
+     * @param recurso
+     * @param jsonDatos
+     * @param URLBase
+     * @return
+     * @throws Exception 
+     */
     @Override
-    public String consumirWebservices(String usr,
-            String metodo, String recurso, String jsonDatos,String URLBase) 
+    public String consumirWebservices(String usr, String jsonDatos,String URLBase) 
         throws Exception {
         String respuesta = null;
         if (URLBase == null) {
@@ -59,15 +67,18 @@ public class ConsumerWS implements ConsumerWSLocal {
         mapHeader.put("User", usr);
         mapHeader.put("fecha", new Date().toString());
         mapHeader.put("Token", token);
+        mapHeader.put("json", jsonDatos);
         try {
             String jsonHeader = new Gson().toJson(mapHeader);
             Client client = Client.create();
             WebResource webResource = client.resource(URLBase);
             WebResource.Builder buildws;
-            buildws = webResource.path(recurso).path(metodo)
+            buildws = webResource
                     .header("autorizacion", jsonHeader);
+            System.out.println("buildws..." +buildws);
             ClientResponse response;
-            response = buildws.post(ClientResponse.class, jsonDatos);
+            response = buildws.get(ClientResponse.class);
+            System.out.println("response.." +response);
             String rs = response.getEntity(String.class);
                Gson json = new Gson();
                System.out.println("rs,,,,." +rs);
@@ -152,22 +163,31 @@ public class ConsumerWS implements ConsumerWSLocal {
         resp.setStatus(200);
         return resp;
     }
-
- private String crearTokenWebservice(String usr, String fecha) {
+    /**
+     * 
+     * @param usr
+     * @param fecha
+     * @return 
+     */
+    private String crearTokenWebservice(String usr, String fecha) {
     String valor  = usr +  fecha;
      String token = String.valueOf(valor.hashCode());
      return token;
      
  }
- 
-     public static < T> T getParemetro(Object object, Map filtros) {
+    /**
+     * 
+     * @param <T>
+     * @param object
+     * @param filtros
+     * @return 
+     */
+    public static < T> T getParemetro(Object object, Map filtros) {
         if (filtros == null || object == null) {
             return null;
         }
         return (T) filtros.get(object);
     } 
 
-    public void persist(Object object) {
-        em.persist(object);
-    }
+
 }
