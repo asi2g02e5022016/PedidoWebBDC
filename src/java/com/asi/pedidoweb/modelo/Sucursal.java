@@ -31,6 +31,13 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Sucursal.findAll", query = "SELECT s FROM Sucursal s")})
 public class Sucursal implements Serializable {
 
+    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Size(max = 200)
+    @Column(name = "email")
+    private String email;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
+    private List<Ordenpedido> ordenpedidoList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +59,6 @@ public class Sucursal implements Serializable {
     @Size(min = 1, max = 9)
     @Column(name = "telefono")
     private String telefono;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private List<Pedidoencabezado> pedidoencabezadoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private List<Pedidodetalle> pedidodetalleList;
 
     public Sucursal() {
     }
@@ -103,23 +106,6 @@ public class Sucursal implements Serializable {
         this.telefono = telefono;
     }
 
-    public List<Pedidoencabezado> getPedidoencabezadoList() {
-        return pedidoencabezadoList;
-    }
-
-    public void setPedidoencabezadoList(List<Pedidoencabezado> pedidoencabezadoList) {
-        this.pedidoencabezadoList = pedidoencabezadoList;
-    }
-
-    public List<Pedidodetalle> getPedidodetalleList() {
-        return pedidodetalleList;
-    }
-
-    public void setPedidodetalleList(List<Pedidodetalle> pedidodetalleList) {
-        this.pedidodetalleList = pedidodetalleList;
-    }
-
-
 
     @Override
     public int hashCode() {
@@ -144,6 +130,24 @@ public class Sucursal implements Serializable {
     @Override
     public String toString() {
         return "com.asi.pedidoweb.modelo.Sucursal[ idsucursal=" + idsucursal + " ]";
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+
+    public List<Ordenpedido> getOrdenpedidoList() {
+        return ordenpedidoList;
+    }
+
+    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+        this.ordenpedidoList = ordenpedidoList;
     }
     
 }

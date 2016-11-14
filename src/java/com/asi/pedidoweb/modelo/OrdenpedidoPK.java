@@ -16,43 +16,30 @@ import javax.validation.constraints.NotNull;
  * @author samaelopez
  */
 @Embeddable
-public class PedidodetallePK implements Serializable {
+public class OrdenpedidoPK implements Serializable {
 
     @Basic(optional = false)
-    @Column(name = "idpedidodetalle")
-    private int idpedidodetalle;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "idpedido")
-    private int idpedido;
+    @Column(name = "idordenpedido")
+    private int idordenpedido;
     @Basic(optional = false)
     @NotNull
     @Column(name = "idsucursal")
     private int idsucursal;
 
-    public PedidodetallePK() {
+    public OrdenpedidoPK() {
     }
 
-    public PedidodetallePK(int idpedidodetalle, int idpedido, int idsucursal) {
-        this.idpedidodetalle = idpedidodetalle;
-        this.idpedido = idpedido;
+    public OrdenpedidoPK(int idordenpedido, int idsucursal) {
+        this.idordenpedido = idordenpedido;
         this.idsucursal = idsucursal;
     }
 
-    public int getIdpedidodetalle() {
-        return idpedidodetalle;
+    public int getIdordenpedido() {
+        return idordenpedido;
     }
 
-    public void setIdpedidodetalle(int idpedidodetalle) {
-        this.idpedidodetalle = idpedidodetalle;
-    }
-
-    public int getIdpedido() {
-        return idpedido;
-    }
-
-    public void setIdpedido(int idpedido) {
-        this.idpedido = idpedido;
+    public void setIdordenpedido(int idordenpedido) {
+        this.idordenpedido = idordenpedido;
     }
 
     public int getIdsucursal() {
@@ -66,8 +53,7 @@ public class PedidodetallePK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) idpedidodetalle;
-        hash += (int) idpedido;
+        hash += (int) idordenpedido;
         hash += (int) idsucursal;
         return hash;
     }
@@ -75,14 +61,11 @@ public class PedidodetallePK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof PedidodetallePK)) {
+        if (!(object instanceof OrdenpedidoPK)) {
             return false;
         }
-        PedidodetallePK other = (PedidodetallePK) object;
-        if (this.idpedidodetalle != other.idpedidodetalle) {
-            return false;
-        }
-        if (this.idpedido != other.idpedido) {
+        OrdenpedidoPK other = (OrdenpedidoPK) object;
+        if (this.idordenpedido != other.idordenpedido) {
             return false;
         }
         if (this.idsucursal != other.idsucursal) {
@@ -93,7 +76,7 @@ public class PedidodetallePK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.asi.pedidoweb.modelo.PedidodetallePK[ idpedidodetalle=" + idpedidodetalle + ", idpedido=" + idpedido + ", idsucursal=" + idsucursal + " ]";
+        return "com.asi.pedidoweb.modelo.OrdenpedidoPK[ idordenpedido=" + idordenpedido + ", idsucursal=" + idsucursal + " ]";
     }
     
 }

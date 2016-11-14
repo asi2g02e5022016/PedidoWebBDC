@@ -28,19 +28,24 @@ import javax.validation.constraints.NotNull;
  * @author samaelopez
  */
 @Entity
-@Table(name = "pedidoencabezado")
+@Table(name = "ordenpedido")
 @NamedQueries({
-    @NamedQuery(name = "Pedidoencabezado.findAll", query = "SELECT p FROM Pedidoencabezado p")})
-public class Pedidoencabezado implements Serializable {
+    @NamedQuery(name = "Ordenpedido.findAll", query = "SELECT o FROM Ordenpedido o")})
+public class Ordenpedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @EmbeddedId
-    protected PedidoencabezadoPK pedidoencabezadoPK;
+    protected OrdenpedidoPK ordenpedidoPK;
     @Basic(optional = false)
     @NotNull
     @Column(name = "fechapedido")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechapedido;
+    @Column(name = "mesa")
+    private Integer mesa;
+    @JoinColumn(name = "idcliente", referencedColumnName = "idcliente")
+    @ManyToOne(optional = false)
+    private Cliente idcliente;
     @JoinColumn(name = "idestado", referencedColumnName = "idestado")
     @ManyToOne(optional = false)
     private Estado idestado;
@@ -50,31 +55,31 @@ public class Pedidoencabezado implements Serializable {
     @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
     @ManyToOne(optional = false)
     private Usuario idusuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidoencabezado")
-    private List<Pedidodetalle> pedidodetalleList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ordenpedido")
+    private List<Ordenpedidodetalle> ordenpedidodetalleList;
 
-    public Pedidoencabezado() {
+    public Ordenpedido() {
     }
 
-    public Pedidoencabezado(PedidoencabezadoPK pedidoencabezadoPK) {
-        this.pedidoencabezadoPK = pedidoencabezadoPK;
+    public Ordenpedido(OrdenpedidoPK ordenpedidoPK) {
+        this.ordenpedidoPK = ordenpedidoPK;
     }
 
-    public Pedidoencabezado(PedidoencabezadoPK pedidoencabezadoPK, Date fechapedido) {
-        this.pedidoencabezadoPK = pedidoencabezadoPK;
+    public Ordenpedido(OrdenpedidoPK ordenpedidoPK, Date fechapedido) {
+        this.ordenpedidoPK = ordenpedidoPK;
         this.fechapedido = fechapedido;
     }
 
-    public Pedidoencabezado(int idpedido, int idsucursal) {
-        this.pedidoencabezadoPK = new PedidoencabezadoPK(idpedido, idsucursal);
+    public Ordenpedido(int idordenpedido, int idsucursal) {
+        this.ordenpedidoPK = new OrdenpedidoPK(idordenpedido, idsucursal);
     }
 
-    public PedidoencabezadoPK getPedidoencabezadoPK() {
-        return pedidoencabezadoPK;
+    public OrdenpedidoPK getOrdenpedidoPK() {
+        return ordenpedidoPK;
     }
 
-    public void setPedidoencabezadoPK(PedidoencabezadoPK pedidoencabezadoPK) {
-        this.pedidoencabezadoPK = pedidoencabezadoPK;
+    public void setOrdenpedidoPK(OrdenpedidoPK ordenpedidoPK) {
+        this.ordenpedidoPK = ordenpedidoPK;
     }
 
     public Date getFechapedido() {
@@ -83,6 +88,22 @@ public class Pedidoencabezado implements Serializable {
 
     public void setFechapedido(Date fechapedido) {
         this.fechapedido = fechapedido;
+    }
+
+    public Integer getMesa() {
+        return mesa;
+    }
+
+    public void setMesa(Integer mesa) {
+        this.mesa = mesa;
+    }
+
+    public Cliente getIdcliente() {
+        return idcliente;
+    }
+
+    public void setIdcliente(Cliente idcliente) {
+        this.idcliente = idcliente;
     }
 
     public Estado getIdestado() {
@@ -109,29 +130,29 @@ public class Pedidoencabezado implements Serializable {
         this.idusuario = idusuario;
     }
 
-    public List<Pedidodetalle> getPedidodetalleList() {
-        return pedidodetalleList;
+    public List<Ordenpedidodetalle> getOrdenpedidodetalleList() {
+        return ordenpedidodetalleList;
     }
 
-    public void setPedidodetalleList(List<Pedidodetalle> pedidodetalleList) {
-        this.pedidodetalleList = pedidodetalleList;
+    public void setOrdenpedidodetalleList(List<Ordenpedidodetalle> ordenpedidodetalleList) {
+        this.ordenpedidodetalleList = ordenpedidodetalleList;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (pedidoencabezadoPK != null ? pedidoencabezadoPK.hashCode() : 0);
+        hash += (ordenpedidoPK != null ? ordenpedidoPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Pedidoencabezado)) {
+        if (!(object instanceof Ordenpedido)) {
             return false;
         }
-        Pedidoencabezado other = (Pedidoencabezado) object;
-        if ((this.pedidoencabezadoPK == null && other.pedidoencabezadoPK != null) || (this.pedidoencabezadoPK != null && !this.pedidoencabezadoPK.equals(other.pedidoencabezadoPK))) {
+        Ordenpedido other = (Ordenpedido) object;
+        if ((this.ordenpedidoPK == null && other.ordenpedidoPK != null) || (this.ordenpedidoPK != null && !this.ordenpedidoPK.equals(other.ordenpedidoPK))) {
             return false;
         }
         return true;
@@ -139,7 +160,7 @@ public class Pedidoencabezado implements Serializable {
 
     @Override
     public String toString() {
-        return "com.asi.pedidoweb.modelo.Pedidoencabezado[ pedidoencabezadoPK=" + pedidoencabezadoPK + " ]";
+        return "com.asi.pedidoweb.modelo.Ordenpedido[ ordenpedidoPK=" + ordenpedidoPK + " ]";
     }
     
 }

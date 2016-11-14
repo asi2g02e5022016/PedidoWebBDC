@@ -34,6 +34,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Grupoproducto.findAll", query = "SELECT g FROM Grupoproducto g")})
 public class Grupoproducto implements Serializable {
 
+    @Lob
+    @Column(name = "imagen")
+    private byte[] imagen;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,9 +53,6 @@ public class Grupoproducto implements Serializable {
     @NotNull
     @Column(name = "nivel")
     private int nivel;
-    @Lob
-    @Column(name = "imagen")
-    private byte[] imagen;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idgrupoproducto")
     private List<Producto> productoList;
     @OneToMany(mappedBy = "grupodependencia")
@@ -97,13 +98,6 @@ public class Grupoproducto implements Serializable {
         this.nivel = nivel;
     }
 
-    public byte[] getImagen() {
-        return imagen;
-    }
-
-    public void setImagen(byte[] imagen) {
-        this.imagen = imagen;
-    }
 
     public List<Producto> getProductoList() {
         return productoList;
@@ -152,6 +146,14 @@ public class Grupoproducto implements Serializable {
     @Override
     public String toString() {
         return "com.asi.pedidoweb.modelo.Grupoproducto[ idgrupoproducto=" + idgrupoproducto + " ]";
+    }
+
+    public byte[] getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(byte[] imagen) {
+        this.imagen = imagen;
     }
     
 }

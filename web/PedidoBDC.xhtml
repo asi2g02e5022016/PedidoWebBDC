@@ -14,75 +14,68 @@
  <p:panel id="basic" header="Pedidos Online"  >
             <p:menubar>
                 <p:menuitem value="Nuevo" update="forprincipal" 
-                            
+                            action="#{pedidoWEb.limpiarPedido()}"
                             icon="ui-icon-plus" />
                <p:menuitem value="Guardar" 
+                           action="#{pedidoWEb.guardarPedido()}"
                             icon="ui-icon-disk" />
                 <p:menuitem value="Monitor"
                             action="#{pedidoWEb.mostrarProducto()}"
                             
                             icon=" ui-icon-search" />
             </p:menubar>
-                    <h:panelGrid columns="6" width="80%">
+                    <h:panelGrid columns="4" width="80%">
                         
                         <h:outputLabel  value="Cliente "  />
-                        <p:inputText readonly="true"  
-                                      />
-                
-                         
-                        <h:outputLabel  value="Forma pago "  />
-                        <p:inputText  readonly="true"   />
+                        <p:inputText readonly="true" value="#{pedidoWEb.descripCliente}"    />
+                     
                         
-                       
-                       
-                           <h:outputLabel  value="Serie "  />
-                        <p:inputText     />
-                        <h:outputLabel  value="Sucursal "  />
-                        <p:inputText  readonly="true"   />
-                       
-                         <h:outputLabel  value="Tipo Pago "  />
-                        <p:inputText readonly="true"  />
-                         <h:outputLabel  value="Codigo "  />
-                        <p:inputText  />
-                        <h:outputLabel  value="Estado "  />
-                        <p:inputText  readonly="true"  />   
-                         <h:outputLabel  value="Fecha "  />
-                        <p:inputText readonly="true"  >
-                        <f:convertDateTime pattern="dd/MM/yyyy" />
-                        </p:inputText>  
-                           <h:outputLabel  value="Sucursal:  "  />
+                              <h:outputLabel  value="Sucursal:  "  />
                         <p:selectOneMenu id="listSucursal"  value ="#{pedidoWEb.codsucursal}" >
                             <f:selectItems value="#{pedidoWEb.lstSucursal}"
                                            var="suc" itemLabel="#{suc.sucursal}" itemValue="#{suc.idsucursal}"/>                                       
                         </p:selectOneMenu> 
+                        
+                         <h:outputLabel  value="Fecha "  />
+                         <p:inputText readonly="true"  value="#{pedidoWEb.fecha}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                        </p:inputText>  
+                     
+                        <h:outputLabel  value="Estado "  />
+                        <p:inputText  readonly="true" value="#{pedidoWEb.estado}" />   
+                            
+                         
+                         
                     </h:panelGrid>
             <h:panelGrid columns="8" width="100%"  style="background: #C0BEBE">
                           <h:outputLabel  value="Cantidad "  />
-                        <p:inputText   />
+                          <p:inputText  value="#{pedidoWEb.cantidadSolic}" />
                          <h:outputLabel  value="Producto "  />
                          <h:panelGroup >
-                             <p:inputText  />
+                             <p:inputText value="#{pedidoWEb.descripcionProducto}" />
                              <p:commandButton   action="#{pedidoWEb.mostrarDialogProd()}"
                                            id="iconOnly" 
                                            icon="ui-icon-search" title="Icon Only" />
                          </h:panelGroup>
                          
                         <h:outputLabel  value="medida "  />
-                        <p:inputText  readonly="true"  />
+                        <p:inputText value="#{pedidoWEb.medida}" readonly="true"  />
                         <h:outputLabel  value="Agregar "  />
                            <p:commandButton  
-                                           id="iconOnlya" 
+                               id="iconOnlya" action="#{pedidoWEb.agreaLinea()}" update="forprincipal"
                                            icon="ui-icon-circle-arrow-e" title="Icon Only" />
                 </h:panelGrid>
             <p:dataGrid var="car"  columns="3" layout="grid"
+                        
                         rows="12" paginator="true" id="cars"
+                        value="#{pedidoWEb.lstDetalle}"
                         emptyMessage="">
 
-                <p:panel header="#{car.id}" style="text-align:center">
-                    <h:panelGrid columns="1" style="width:100%">
+                <p:panel  style="text-align:center">
+                    <h:panelGrid columns="1" id="iddet" style="width:100%">
                         <p:graphicImage /> 
 
-                        <h:outputText />
+                        <h:outputText value="#{car.idproducto.producto}"/>
 
                         <p:commandLink update=":form:carDetail"
                                        oncomplete="PF('carDialog').show()" title="View Detail">
@@ -90,6 +83,7 @@
                             <f:setPropertyActionListener value="" 
                                                          target="" />
                         </p:commandLink>
+                        
                     </h:panelGrid>
                 </p:panel>
 
@@ -114,7 +108,8 @@
                                  var="dpro"    
                                  rowKey="#{dpro.idproducto}"
                                  selectionMode="single" rows="10"  >                        
-                        <p:ajax event="rowSelect" update="forprincipal" process="@all"  
+                        <p:ajax event="rowSelect" listener="#{pedidoWEb.onRowSelect}"
+                                update="forprincipal" process="@all"  
                            />
                         <p:column  headerText="Producto">
                             <h:outputText  value="#{ dpro.producto}" />

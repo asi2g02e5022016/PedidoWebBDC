@@ -18,8 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 /**
  *
@@ -31,6 +29,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Estado.findAll", query = "SELECT e FROM Estado e")})
 public class Estado implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestado")
+    private List<Ordenpedido> ordenpedidoList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,12 +39,8 @@ public class Estado implements Serializable {
     @Column(name = "idestado")
     private Integer idestado;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
     @Column(name = "estado")
     private String estado;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idestado")
-    private List<Pedidoencabezado> pedidoencabezadoList;
 
     public Estado() {
     }
@@ -73,13 +70,6 @@ public class Estado implements Serializable {
         this.estado = estado;
     }
 
-    public List<Pedidoencabezado> getPedidoencabezadoList() {
-        return pedidoencabezadoList;
-    }
-
-    public void setPedidoencabezadoList(List<Pedidoencabezado> pedidoencabezadoList) {
-        this.pedidoencabezadoList = pedidoencabezadoList;
-    }
 
     @Override
     public int hashCode() {
@@ -104,6 +94,14 @@ public class Estado implements Serializable {
     @Override
     public String toString() {
         return "com.asi.pedidoweb.modelo.Estado[ idestado=" + idestado + " ]";
+    }
+
+    public List<Ordenpedido> getOrdenpedidoList() {
+        return ordenpedidoList;
+    }
+
+    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+        this.ordenpedidoList = ordenpedidoList;
     }
     
 }

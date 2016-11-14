@@ -36,6 +36,12 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Producto.findAll", query = "SELECT p FROM Producto p")})
 public class Producto implements Serializable {
 
+    @JoinColumn(name = "idreceta", referencedColumnName = "idreceta")
+    @ManyToOne
+    private Receta idreceta;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idproducto")
+    private List<Ordenpedidodetalle> ordenpedidodetalleList;
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,8 +76,6 @@ public class Producto implements Serializable {
     private boolean vendible;
     @Column(name = "excento")
     private Boolean excento;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idproducto")
-    private List<Pedidodetalle> pedidodetalleList;
     @JoinColumn(name = "idgrupoproducto", referencedColumnName = "idgrupoproducto")
     @ManyToOne(optional = false)
     private Grupoproducto idgrupoproducto;
@@ -169,13 +173,7 @@ public class Producto implements Serializable {
         this.excento = excento;
     }
 
-    public List<Pedidodetalle> getPedidodetalleList() {
-        return pedidodetalleList;
-    }
 
-    public void setPedidodetalleList(List<Pedidodetalle> pedidodetalleList) {
-        this.pedidodetalleList = pedidodetalleList;
-    }
 
     public Grupoproducto getIdgrupoproducto() {
         return idgrupoproducto;
@@ -240,6 +238,22 @@ public class Producto implements Serializable {
     @Override
     public String toString() {
         return "com.asi.pedidoweb.modelo.Producto[ idproducto=" + idproducto + " ]";
+    }
+
+    public Receta getIdreceta() {
+        return idreceta;
+    }
+
+    public void setIdreceta(Receta idreceta) {
+        this.idreceta = idreceta;
+    }
+
+    public List<Ordenpedidodetalle> getOrdenpedidodetalleList() {
+        return ordenpedidodetalleList;
+    }
+
+    public void setOrdenpedidodetalleList(List<Ordenpedidodetalle> ordenpedidodetalleList) {
+        this.ordenpedidodetalleList = ordenpedidodetalleList;
     }
     
 }

@@ -6,7 +6,9 @@
 package com.asi.pedidoweb.modelo;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,6 +30,9 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "Cliente.findAll", query = "SELECT c FROM Cliente c")})
 public class Cliente implements Serializable {
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idcliente")
+    private List<Ordenpedido> ordenpedidoList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -218,6 +224,14 @@ public class Cliente implements Serializable {
     @Override
     public String toString() {
         return "com.asi.pedidoweb.modelo.Cliente[ idcliente=" + idcliente + " ]";
+    }
+
+    public List<Ordenpedido> getOrdenpedidoList() {
+        return ordenpedidoList;
+    }
+
+    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+        this.ordenpedidoList = ordenpedidoList;
     }
     
 }

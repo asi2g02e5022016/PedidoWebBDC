@@ -34,6 +34,12 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "Usuario.findAll", query = "SELECT u FROM Usuario u")})
 public class Usuario implements Serializable {
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
+    private List<Ordenpedido> ordenpedidoList;
+    @JoinColumn(name = "idperfil", referencedColumnName = "idperfil")
+    @ManyToOne(optional = false)
+    private Perfil idperfil;
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -59,12 +65,7 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechabaja;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
-    private List<Pedidoencabezado> pedidoencabezadoList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
     private List<Producto> productoList;
-    @JoinColumn(name = "idempleado", referencedColumnName = "idempleado")
-    @ManyToOne(optional = false)
-    private Perfil idperfil;
 
     public Usuario() {
     }
@@ -120,13 +121,7 @@ public class Usuario implements Serializable {
         this.fechabaja = fechabaja;
     }
 
-    public List<Pedidoencabezado> getPedidoencabezadoList() {
-        return pedidoencabezadoList;
-    }
 
-    public void setPedidoencabezadoList(List<Pedidoencabezado> pedidoencabezadoList) {
-        this.pedidoencabezadoList = pedidoencabezadoList;
-    }
 
     public List<Producto> getProductoList() {
         return productoList;
@@ -160,7 +155,9 @@ public class Usuario implements Serializable {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.idusuario == null && other.idusuario != null) || (this.idusuario != null && !this.idusuario.equals(other.idusuario))) {
+        if ((this.idusuario == null && other.idusuario != null) 
+                || (this.idusuario != null 
+                && !this.idusuario.equals(other.idusuario))) {
             return false;
         }
         return true;
@@ -169,6 +166,14 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "com.asi.pedidoweb.modelo.Usuario[ idusuario=" + idusuario + " ]";
+    }
+
+    public List<Ordenpedido> getOrdenpedidoList() {
+        return ordenpedidoList;
+    }
+
+    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+        this.ordenpedidoList = ordenpedidoList;
     }
     
 }
