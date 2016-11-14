@@ -13,6 +13,7 @@ import com.asi.pedidoweb.modelo.Medida;
 import com.asi.pedidoweb.modelo.Ordenpedido;
 import com.asi.pedidoweb.modelo.Ordenpedidodetalle;
 import com.asi.pedidoweb.modelo.Producto;
+import com.asi.pedidoweb.modelo.ReponseWs;
 import com.asi.pedidoweb.modelo.Sucursal;
 import com.asi.pedidoweb.modelo.Vwproductos;
 import com.asi.pedidoweb.negocio.ConsumerWSLocal;
@@ -20,7 +21,13 @@ import com.asi.pedidoweb.negocio.GestorEmailLocal;
 import com.asi.pedidoweb.negocio.ProcesosVentasLocal;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 import java.io.Serializable;
+import java.net.ConnectException;
+import java.net.NoRouteToHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.inject.Inject;
@@ -249,7 +256,7 @@ public class PedidoWeb implements Serializable{
            this.idCliente = null;
            this.medida =  null;
       }
-    public void guardarPedido() {
+    public void guardarPedido() throws Exception {
         if (codsucursal == 0) {
             alert("Debe selecionar una sucursal.", FacesMessage.SEVERITY_WARN);
             return;
@@ -259,16 +266,42 @@ public class PedidoWeb implements Serializable{
             alert("No se a seleccionado un sucursal.", FacesMessage.SEVERITY_WARN);
             return;
         }
-        if (lstDetalle == null || lstDetalle.isEmpty()) {
-            alert("No existe detalle.", FacesMessage.SEVERITY_WARN);
-            return;
-        }
+//        if (lstDetalle == null || lstDetalle.isEmpty()) {
+//            alert("No existe detalle.", FacesMessage.SEVERITY_WARN);
+//            return;
+//        }
         oderPedido =  new Ordenpedido();
         this.oderPedido.setSucursal(suc);
         this.oderPedido.setFechapedido(new Date());
         this.oderPedido.setIdcliente(cliente);
 //        this.set.setIdcliente(cliente);
-        
+
+
+    String jsonDatos = new Gson().toJson(oderPedido);
+     Map mapHeader = new HashMap();
+        mapHeader.put("User", sesion.getUserCliente());
+        mapHeader.put("fecha", new Date().toString());
+        //mapHeader.put("Token", token);
+        mapHeader.put("json", jsonDatos);
+        try {
+            String jsonHeader = new Gson().toJson(mapHeader);
+            Client client = Client.create();
+            String URLbAS = URLBASE + "/VentasWS";
+            WebResource webResource = client.resource(URLbAS);
+            WebResource.Builder buildws;
+            buildws = webResource
+                    .header("autorizacion", jsonHeader);
+            buildws.put(String.class, jsonDatos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof ConnectException
+                    || e instanceof ClientHandlerException
+                    || e instanceof NoRouteToHostException) {
+                throw new Exception("No se pudo establecer comunicacion con servicios web,"
+                        + " comuniquese con el administrador");
+            }
+            throw new Exception(e.getMessage());
+        }   
     }
     public List<Vwproductos> getLstProducto() {
         return lstProducto;
