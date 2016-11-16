@@ -5,11 +5,16 @@
  */
 package com.asi.pedidoweb.controller;
 
+import com.asi.pedidoweb.modelo.Cliente;
+import com.asi.pedidoweb.negocio.ConsumerWSLocal;
+import com.google.gson.Gson;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -23,6 +28,11 @@ import org.primefaces.context.RequestContext;
 @ManagedBean(name = "indexBeans")
 @ViewScoped
 public class IndexBeans implements  Serializable {
+
+    @EJB
+    private ConsumerWSLocal consumerWS;
+    
+    
    
    @Inject
    SessionUsr sesion;
@@ -41,6 +51,7 @@ public class IndexBeans implements  Serializable {
     public String ingresarSistema() {
         System.out.println("entroo...");
        try {
+           
            if (usuario == null
                    || usuario.trim().equals("")) {
               
@@ -59,22 +70,30 @@ public class IndexBeans implements  Serializable {
            }
            System.out.println(" password.hashCode().. "
                    +  password.hashCode());
-//           Usuario usr = crud.buscarEntidad(Usuario.class, usuario);
-//           if (usr != null) {
-//               System.out.println("password.hashCode().." +password.hashCode());
-//               System.out.println("usr.getClave().." +usr.getClave());
-//                  if (!String.valueOf(
-//                   password.hashCode()).equals(usr.getClave()) ) { 
-//                      mensaje ="El usuario o clave son invalidos ";
-//                alert(mensaje,FacesMessage.SEVERITY_INFO );
-//               return null;
-//               
-//             }
+             Properties propiedades = new Properties();
+    
+   /**Cargamos el archivo desde la ruta especificada*/
+   propiedades
+     .load(getClass().getResourceAsStream("server.properties"));
+ 
+   /**Obtenemos los parametros definidos en el archivo*/
+       String URLBASE = propiedades.getProperty("serverPrincipal");
+           Cliente cli = new Cliente();
+           cli.setUsuario(usuario);
+           cli.setPassword(password);
+           System.out.println("URLBASE.. " +URLBASE);
+       String json =  new Gson().toJson(cli);
+            String jsonRetur = this.consumerWS.consumirWebservices(
+                    usuario, json, 
+                    URLBASE + "UsuarioWS");
+            cli = new Gson().fromJson(jsonRetur, Cliente.class);
                   if (sesion == null) {
                sesion = new SessionUsr();
            }
+                  sesion.setCliente(cli);
+                  
                   String token = 
-                        usuario+ password + new Date().toString();
+               usuario+ password + new Date().toString();
                sesion.setUserCliente(usuario);
                sesion.setFecha(new Date());
                sesion.setToken(String.valueOf(token.hashCode()));

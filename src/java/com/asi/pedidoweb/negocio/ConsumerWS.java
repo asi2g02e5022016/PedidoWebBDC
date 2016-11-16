@@ -70,6 +70,7 @@ public class ConsumerWS implements ConsumerWSLocal {
         mapHeader.put("json", jsonDatos);
         try {
             String jsonHeader = new Gson().toJson(mapHeader);
+            System.out.println("jsonHeader.. " +jsonHeader);
             Client client = Client.create();
             WebResource webResource = client.resource(URLBase);
             WebResource.Builder buildws;

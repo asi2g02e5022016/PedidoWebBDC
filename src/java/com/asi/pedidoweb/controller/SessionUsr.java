@@ -5,11 +5,9 @@
  */
 package com.asi.pedidoweb.controller;
 
-import com.asi.pedidoweb.modelo.Perfil;
-import com.asi.pedidoweb.modelo.Sucursal;
+import com.asi.pedidoweb.modelo.Cliente;
 import com.asi.pedidoweb.modelo.Usuario;
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
 import javax.enterprise.context.SessionScoped;
@@ -23,23 +21,14 @@ import javax.inject.Named;
 @SessionScoped
 public class SessionUsr implements Serializable {
     private Usuario usuario;
-    private Sucursal sucursal;
-    private Perfil perfil;
     private String token;
-     private String userCliente;
-    private BigInteger codPant;
+    private String userCliente;
     private Date fecha = new Date();
     private String url;
+    private Integer codCliente;
+     private Cliente cliente;
 
 
-
-    public BigInteger getCodPant() {
-        return codPant;
-    }
-
-    public void setCodPant(BigInteger codPant) {
-        this.codPant = codPant;
-    }
 
     public Date getFecha() {
         return fecha;
@@ -75,28 +64,28 @@ public class SessionUsr implements Serializable {
     }
 
 
-    public Sucursal getSucursal() {
-        return sucursal;
-    }
-
-    public void setSucursal(Sucursal sucursal) {
-        this.sucursal = sucursal;
-    }
-
-    public Perfil getPerfil() {
-        return perfil;
-    }
-
-    public void setPerfil(Perfil perfil) {
-        this.perfil = perfil;
-    }
-
     public String getUserCliente() {
         return userCliente;
     }
 
     public void setUserCliente(String userCliente) {
         this.userCliente = userCliente;
+    }
+
+    public Integer getCodCliente() {
+        return codCliente;
+    }
+
+    public void setCodCliente(Integer codCliente) {
+        this.codCliente = codCliente;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
 

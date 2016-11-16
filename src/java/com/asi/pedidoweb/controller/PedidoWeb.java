@@ -119,7 +119,7 @@ public class PedidoWeb implements Serializable{
                         FacesMessage.SEVERITY_INFO);
             }
             fecha = new Date();
-             descripCliente = "SAMAEL LOPEZ";
+             descripCliente = sesion.getUserCliente();
         }catch (Exception e) {
             e.printStackTrace();
             alert(e.getMessage(), FacesMessage.SEVERITY_FATAL);
@@ -176,11 +176,12 @@ public class PedidoWeb implements Serializable{
 
     
     
-    public void purebaEnviarcorreo() {
+    public void enviarcorreo(String correo) {
         try {
             List< String> lst = new ArrayList<>();
-            lst.add("gerencia@bodeguitadelcerdito.com");
-            gestorEmail.enviarEmail("Correo de prueba", "Prueba", "pso", lst, "sa");
+            lst.add(correo);
+            gestorEmail.enviarEmail("Correo de Pedido Web.",
+                    "Pedido Web", "Pedido Web", lst, "Bodeguita del cerdito");
         } catch (Exception ex) {
             Logger.getLogger(PedidoWeb.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -270,38 +271,37 @@ public class PedidoWeb implements Serializable{
 //            alert("No existe detalle.", FacesMessage.SEVERITY_WARN);
 //            return;
 //        }
+        cliente = new Cliente();
+        cliente.setIdcliente(sesion.getCodCliente());
         oderPedido =  new Ordenpedido();
         this.oderPedido.setSucursal(suc);
         this.oderPedido.setFechapedido(new Date());
         this.oderPedido.setIdcliente(cliente);
+        oderPedido.setOrdenpedidodetalleList(lstDetalle);
 //        this.set.setIdcliente(cliente);
 
 
     String jsonDatos = new Gson().toJson(oderPedido);
-     Map mapHeader = new HashMap();
-        mapHeader.put("User", sesion.getUserCliente());
-        mapHeader.put("fecha", new Date().toString());
-        //mapHeader.put("Token", token);
-        mapHeader.put("json", jsonDatos);
-        try {
-            String jsonHeader = new Gson().toJson(mapHeader);
-            Client client = Client.create();
-            String URLbAS = URLBASE + "/VentasWS";
-            WebResource webResource = client.resource(URLbAS);
-            WebResource.Builder buildws;
-            buildws = webResource
-                    .header("autorizacion", jsonHeader);
-            buildws.put(String.class, jsonDatos);
+       String jsonRetur = this.consumerWS.consumirWebservices(
+                    sesion.getUserCliente(),jsonDatos, 
+                    URLBASE + "GuardarPedido");
+            System.out.println("jsonRetur... " + jsonRetur);
+          alert(jsonRetur, FacesMessage.SEVERITY_INFO);
+          try {
+              if (suc.getEmail() != null) {
+              enviarcorreo(suc.getEmail());
+              
+              Logger.getLogger(PedidoWeb.class.getName()).log(Level.INFO,
+                      "El correo se envio exitosamente.");
+              } else {
+                 
+              Logger.getLogger(PedidoWeb.class.getName()).log(Level.INFO,
+                      "la sucursal no tiene asignado correo ");   
+              }
         } catch (Exception e) {
-            e.printStackTrace();
-            if (e instanceof ConnectException
-                    || e instanceof ClientHandlerException
-                    || e instanceof NoRouteToHostException) {
-                throw new Exception("No se pudo establecer comunicacion con servicios web,"
-                        + " comuniquese con el administrador");
-            }
-            throw new Exception(e.getMessage());
-        }   
+           Logger.getLogger(PedidoWeb.class.getName()).log(
+                    Level.SEVERE, null, e.getMessage());
+        }
     }
     public List<Vwproductos> getLstProducto() {
         return lstProducto;
