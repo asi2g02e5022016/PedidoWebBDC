@@ -80,6 +80,7 @@ public class PedidoWeb implements Serializable{
      private String medida;
      private Date fecha;
      private Ordenpedido oderPedido;
+     private Map sucMap = new HashMap();
      
 
     /**
@@ -117,6 +118,10 @@ public class PedidoWeb implements Serializable{
             if (lstSucursal == null || lstSucursal.isEmpty()) {
                 alert("No se encontraron resultados de sucursales.", 
                         FacesMessage.SEVERITY_INFO);
+            }
+            sucMap = new HashMap();
+            for (Sucursal sucursal : lstSucursal) {
+                sucMap.put(sucursal.getIdsucursal().toString(),sucursal.getEmail() );
             }
             fecha = new Date();
              descripCliente = sesion.getUserCliente();
@@ -262,21 +267,15 @@ public class PedidoWeb implements Serializable{
             alert("Debe selecionar una sucursal.", FacesMessage.SEVERITY_WARN);
             return;
         }
-        Sucursal suc =  lstSucursal.get(codsucursal);
-        if (suc == null) {
-            alert("No se a seleccionado un sucursal.", FacesMessage.SEVERITY_WARN);
-            return;
-        }
-//        if (lstDetalle == null || lstDetalle.isEmpty()) {
-//            alert("No existe detalle.", FacesMessage.SEVERITY_WARN);
-//            return;
-//        }
-        cliente = new Cliente();
-        cliente.setIdcliente(sesion.getCodCliente());
+         String email = getParemetro(String.valueOf(codsucursal),
+                 sucMap);
+       Sucursal suc = new Sucursal();
+       suc.setIdsucursal(codsucursal);
+       suc.setEmail(email);
         oderPedido =  new Ordenpedido();
         this.oderPedido.setSucursal(suc);
         this.oderPedido.setFechapedido(new Date());
-        this.oderPedido.setIdcliente(cliente);
+        this.oderPedido.setIdcliente(sesion.getCliente());
         oderPedido.setOrdenpedidodetalleList(lstDetalle);
 //        this.set.setIdcliente(cliente);
 
@@ -287,6 +286,7 @@ public class PedidoWeb implements Serializable{
                     URLBASE + "GuardarPedido");
             System.out.println("jsonRetur... " + jsonRetur);
           alert(jsonRetur, FacesMessage.SEVERITY_INFO);
+          System.out.println("suc.getEmail() .,... " +suc.getEmail() );
           try {
               if (suc.getEmail() != null) {
               enviarcorreo(suc.getEmail());
@@ -415,6 +415,11 @@ public class PedidoWeb implements Serializable{
         this.descripCliente = descripCliente;
     }
 
-
+    public static < T> T getParemetro(Object object, Map filtros) {
+        if (filtros == null || object == null) {
+            return null;
+        }
+        return (T) filtros.get(object);
+    } 
         
 }

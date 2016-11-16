@@ -10,7 +10,7 @@
                  transport-protocol="smtp"
                  transport-protocol-class="com.sun.mail.smtp.SMTPTransport"
                  user="support@bodeguitadelcerdito.com">
-          <property name="mail-smtp-host" value="192.168.0.6"/>
+          <property name="mail-smtp-host" value="192.168.0.5"/>
     <property name="mail-smtp-password" value="Pass123"/>
     <property name="mail-smtp-port" value="25"/>
     <property name="mail-smtp-user" value="support@bodeguitadelcerdito.com"/>

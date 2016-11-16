@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -80,7 +79,7 @@ public class IndexBeans implements  Serializable {
        String URLBASE = propiedades.getProperty("serverPrincipal");
            Cliente cli = new Cliente();
            cli.setUsuario(usuario);
-           cli.setPassword(password);
+           cli.setPassword(String.valueOf(password.trim().hashCode()));
            System.out.println("URLBASE.. " +URLBASE);
        String json =  new Gson().toJson(cli);
             String jsonRetur = this.consumerWS.consumirWebservices(
