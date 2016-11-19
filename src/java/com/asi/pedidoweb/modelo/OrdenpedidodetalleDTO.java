@@ -6,66 +6,33 @@
 package com.asi.pedidoweb.modelo;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
  * @author samaelopez
  */
-@Entity
-@Table(name = "ordenpedidodetalle")
-@NamedQueries({
-    @NamedQuery(name = "Ordenpedidodetalle.findAll", query = "SELECT o FROM Ordenpedidodetalle o")})
-public class Ordenpedidodetalle implements Serializable {
+public class OrdenpedidodetalleDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
+
     protected OrdenpedidodetallePK ordenpedidodetallePK;
-    @Basic(optional = false)
-    @Column(name = "cantidadsolicitada")
     private Double cantidadsolicitada;
-    @Basic(optional = false)
-    @Column(name = "cantidadconfirmada")
     private Double cantidadconfirmada;
-    @Basic(optional = false)
-    @Column(name = "precio")
     private Double precio;
-    @Basic(optional = false)
-    @Column(name = "costo")
     private Double costo;
-    @Basic(optional = false)
-    @Column(name = "iva")
     private Double iva;
-    @JoinColumn(name = "idproducto", referencedColumnName = "idproducto")
-    @ManyToOne(optional = false)
     private Producto idproducto;
-    @JoinColumns({
-        @JoinColumn(name = "idordenpedido", referencedColumnName = "idordenpedido", insertable = false, updatable = false),
-        @JoinColumn(name = "idSucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false)})
-    @ManyToOne(optional = false)
-    private Ordenpedido ordenpedido;
-    @Transient
+    private OrdenpedidoDTO ordenpedido;
     private Double monto;
-    @Transient
     private Double total;
-    public Ordenpedidodetalle() {
+    public OrdenpedidodetalleDTO() {
     }
 
-    public Ordenpedidodetalle(OrdenpedidodetallePK ordenpedidodetallePK) {
+    public OrdenpedidodetalleDTO(OrdenpedidodetallePK ordenpedidodetallePK) {
         this.ordenpedidodetallePK = ordenpedidodetallePK;
     }
 
-    public Ordenpedidodetalle(OrdenpedidodetallePK ordenpedidodetallePK, 
+    public OrdenpedidodetalleDTO(OrdenpedidodetallePK ordenpedidodetallePK, 
             Double cantidadsolicitada, Double cantidadconfirmada,
             Double precio, Double costo, Double iva) {
         this.ordenpedidodetallePK = ordenpedidodetallePK;
@@ -76,7 +43,7 @@ public class Ordenpedidodetalle implements Serializable {
         this.iva = iva;
     }
 
-    public Ordenpedidodetalle(int idordenpedidodet, int idordenpedido, int idSucursal) {
+    public OrdenpedidodetalleDTO(int idordenpedidodet, int idordenpedido, int idSucursal) {
         this.ordenpedidodetallePK = new OrdenpedidodetallePK(idordenpedidodet, idordenpedido, idSucursal);
     }
 
@@ -137,11 +104,11 @@ public class Ordenpedidodetalle implements Serializable {
         this.idproducto = idproducto;
     }
 
-    public Ordenpedido getOrdenpedido() {
+    public OrdenpedidoDTO getOrdenpedido() {
         return ordenpedido;
     }
 
-    public void setOrdenpedido(Ordenpedido ordenpedido) {
+    public void setOrdenpedido(OrdenpedidoDTO ordenpedido) {
         this.ordenpedido = ordenpedido;
     }
 
@@ -171,10 +138,10 @@ public class Ordenpedidodetalle implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ordenpedidodetalle)) {
+        if (!(object instanceof OrdenpedidodetalleDTO)) {
             return false;
         }
-        Ordenpedidodetalle other = (Ordenpedidodetalle) object;
+        OrdenpedidodetalleDTO other = (OrdenpedidodetalleDTO) object;
         if ((this.ordenpedidodetallePK == null && other.ordenpedidodetallePK != null) || (this.ordenpedidodetallePK != null && !this.ordenpedidodetallePK.equals(other.ordenpedidodetallePK))) {
             return false;
         }

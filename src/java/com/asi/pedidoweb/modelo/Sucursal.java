@@ -36,7 +36,7 @@ public class Sucursal implements Serializable {
     @Column(name = "email")
     private String email;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "sucursal")
-    private List<Ordenpedido> ordenpedidoList;
+    private List<OrdenpedidoDTO> ordenpedidoList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -142,11 +142,11 @@ public class Sucursal implements Serializable {
 
 
 
-    public List<Ordenpedido> getOrdenpedidoList() {
+    public List<OrdenpedidoDTO> getOrdenpedidoList() {
         return ordenpedidoList;
     }
 
-    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+    public void setOrdenpedidoList(List<OrdenpedidoDTO> ordenpedidoList) {
         this.ordenpedidoList = ordenpedidoList;
     }
     

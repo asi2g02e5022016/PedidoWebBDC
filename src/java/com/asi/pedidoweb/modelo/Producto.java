@@ -40,7 +40,7 @@ public class Producto implements Serializable {
     @ManyToOne
     private Receta idreceta;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idproducto")
-    private List<Ordenpedidodetalle> ordenpedidodetalleList;
+    private List<OrdenpedidodetalleDTO> ordenpedidodetalleList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -248,11 +248,11 @@ public class Producto implements Serializable {
         this.idreceta = idreceta;
     }
 
-    public List<Ordenpedidodetalle> getOrdenpedidodetalleList() {
+    public List<OrdenpedidodetalleDTO> getOrdenpedidodetalleList() {
         return ordenpedidodetalleList;
     }
 
-    public void setOrdenpedidodetalleList(List<Ordenpedidodetalle> ordenpedidodetalleList) {
+    public void setOrdenpedidodetalleList(List<OrdenpedidodetalleDTO> ordenpedidodetalleList) {
         this.ordenpedidodetalleList = ordenpedidodetalleList;
     }
     

@@ -8,69 +8,37 @@ package com.asi.pedidoweb.modelo;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 /**
  *
  * @author samaelopez
  */
-@Entity
-@Table(name = "ordenpedido")
-@NamedQueries({
-    @NamedQuery(name = "Ordenpedido.findAll", query = "SELECT o FROM Ordenpedido o")})
-public class Ordenpedido implements Serializable {
+
+public class OrdenpedidoDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
     protected OrdenpedidoPK ordenpedidoPK;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "fechapedido")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date fechapedido;
-    @Column(name = "mesa")
     private Integer mesa;
-    @JoinColumn(name = "idcliente", referencedColumnName = "idcliente")
-    @ManyToOne(optional = false)
     private Cliente idcliente;
-    @JoinColumn(name = "idestado", referencedColumnName = "idestado")
-    @ManyToOne(optional = false)
     private Estado idestado;
-    @JoinColumn(name = "idsucursal", referencedColumnName = "idsucursal", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
     private Sucursal sucursal;
-    @JoinColumn(name = "idusuario", referencedColumnName = "idusuario")
-    @ManyToOne(optional = false)
     private Usuario idusuario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ordenpedido")
-    private List<Ordenpedidodetalle> ordenpedidodetalleList;
+    private List<OrdenpedidodetalleDTO> ordenpedidodetalleList;
 
-    public Ordenpedido() {
+    public OrdenpedidoDTO() {
     }
 
-    public Ordenpedido(OrdenpedidoPK ordenpedidoPK) {
+    public OrdenpedidoDTO(OrdenpedidoPK ordenpedidoPK) {
         this.ordenpedidoPK = ordenpedidoPK;
     }
 
-    public Ordenpedido(OrdenpedidoPK ordenpedidoPK, Date fechapedido) {
+    public OrdenpedidoDTO(OrdenpedidoPK ordenpedidoPK, Date fechapedido) {
         this.ordenpedidoPK = ordenpedidoPK;
         this.fechapedido = fechapedido;
     }
 
-    public Ordenpedido(int idordenpedido, int idsucursal) {
+    public OrdenpedidoDTO(int idordenpedido, int idsucursal) {
         this.ordenpedidoPK = new OrdenpedidoPK(idordenpedido, idsucursal);
     }
 
@@ -130,11 +98,11 @@ public class Ordenpedido implements Serializable {
         this.idusuario = idusuario;
     }
 
-    public List<Ordenpedidodetalle> getOrdenpedidodetalleList() {
+    public List<OrdenpedidodetalleDTO> getOrdenpedidodetalleList() {
         return ordenpedidodetalleList;
     }
 
-    public void setOrdenpedidodetalleList(List<Ordenpedidodetalle> ordenpedidodetalleList) {
+    public void setOrdenpedidodetalleList(List<OrdenpedidodetalleDTO> ordenpedidodetalleList) {
         this.ordenpedidodetalleList = ordenpedidodetalleList;
     }
 
@@ -148,10 +116,10 @@ public class Ordenpedido implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Ordenpedido)) {
+        if (!(object instanceof OrdenpedidoDTO)) {
             return false;
         }
-        Ordenpedido other = (Ordenpedido) object;
+        OrdenpedidoDTO other = (OrdenpedidoDTO) object;
         if ((this.ordenpedidoPK == null && other.ordenpedidoPK != null) || (this.ordenpedidoPK != null && !this.ordenpedidoPK.equals(other.ordenpedidoPK))) {
             return false;
         }

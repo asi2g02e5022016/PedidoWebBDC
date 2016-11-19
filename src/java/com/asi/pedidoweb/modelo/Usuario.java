@@ -35,7 +35,7 @@ import javax.validation.constraints.Size;
 public class Usuario implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idusuario")
-    private List<Ordenpedido> ordenpedidoList;
+    private List<OrdenpedidoDTO> ordenpedidoList;
     @JoinColumn(name = "idperfil", referencedColumnName = "idperfil")
     @ManyToOne(optional = false)
     private Perfil idperfil;
@@ -168,11 +168,11 @@ public class Usuario implements Serializable {
         return "com.asi.pedidoweb.modelo.Usuario[ idusuario=" + idusuario + " ]";
     }
 
-    public List<Ordenpedido> getOrdenpedidoList() {
+    public List<OrdenpedidoDTO> getOrdenpedidoList() {
         return ordenpedidoList;
     }
 
-    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+    public void setOrdenpedidoList(List<OrdenpedidoDTO> ordenpedidoList) {
         this.ordenpedidoList = ordenpedidoList;
     }
     

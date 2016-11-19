@@ -10,8 +10,8 @@ package com.asi.pedidoweb.controller;
 
 import com.asi.pedidoweb.modelo.Cliente;
 import com.asi.pedidoweb.modelo.Medida;
-import com.asi.pedidoweb.modelo.Ordenpedido;
-import com.asi.pedidoweb.modelo.Ordenpedidodetalle;
+import com.asi.pedidoweb.modelo.OrdenpedidoDTO;
+import com.asi.pedidoweb.modelo.OrdenpedidodetalleDTO;
 import com.asi.pedidoweb.modelo.Producto;
 import com.asi.pedidoweb.modelo.ReponseWs;
 import com.asi.pedidoweb.modelo.Sucursal;
@@ -71,7 +71,7 @@ public class PedidoWeb implements Serializable{
     private String descripcionProducto;
     private String URLBASE = null;
     private List< Vwproductos> lstProducto = new ArrayList<>();
-     private List<Ordenpedidodetalle> lstDetalle;
+     private List<OrdenpedidodetalleDTO> lstDetalle;
      private Double cantidadSolic;
      private Integer idCliente;
      private Cliente cliente;
@@ -79,7 +79,7 @@ public class PedidoWeb implements Serializable{
      private String estado;
      private String medida;
      private Date fecha;
-     private Ordenpedido oderPedido;
+     private OrdenpedidoDTO oderPedido;
      private Map sucMap = new HashMap();
      
 
@@ -239,7 +239,7 @@ public class PedidoWeb implements Serializable{
             if (lstDetalle == null ) {
                 lstDetalle = new ArrayList<>();
             }
-            Ordenpedidodetalle pedidoDet = new Ordenpedidodetalle();
+            OrdenpedidodetalleDTO pedidoDet = new OrdenpedidodetalleDTO();
             pedidoDet.setIdproducto(product);
             pedidoDet.setCantidadconfirmada(cantidadSolic);
             pedidoDet.setCantidadsolicitada(cantidadSolic);
@@ -272,7 +272,7 @@ public class PedidoWeb implements Serializable{
        Sucursal suc = new Sucursal();
        suc.setIdsucursal(codsucursal);
        suc.setEmail(email);
-        oderPedido =  new Ordenpedido();
+        oderPedido =  new OrdenpedidoDTO();
         this.oderPedido.setSucursal(suc);
         this.oderPedido.setFechapedido(new Date());
         this.oderPedido.setIdcliente(sesion.getCliente());
@@ -335,11 +335,12 @@ public class PedidoWeb implements Serializable{
         this.descripcionProducto = descripcionProducto;
     }
 
-    public List<Ordenpedidodetalle> getLstDetalle() {
+    public List<OrdenpedidodetalleDTO> getLstDetalle() {
         return lstDetalle;
     }
+    
 
-    public void setLstDetalle(List<Ordenpedidodetalle> lstDetalle) {
+    public void setLstDetalle(List<OrdenpedidodetalleDTO> lstDetalle) {
         this.lstDetalle = lstDetalle;
     }
 
@@ -399,11 +400,11 @@ public class PedidoWeb implements Serializable{
         this.fecha = fecha;
     }
 
-    public Ordenpedido getOderPedido() {
+    public OrdenpedidoDTO getOderPedido() {
         return oderPedido;
     }
 
-    public void setOderPedido(Ordenpedido oderPedido) {
+    public void setOderPedido(OrdenpedidoDTO oderPedido) {
         this.oderPedido = oderPedido;
     }
 

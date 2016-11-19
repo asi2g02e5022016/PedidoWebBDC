@@ -32,7 +32,7 @@ import javax.validation.constraints.Size;
 public class Cliente implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "idcliente")
-    private List<Ordenpedido> ordenpedidoList;
+    private List<OrdenpedidoDTO> ordenpedidoList;
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -226,11 +226,11 @@ public class Cliente implements Serializable {
         return "com.asi.pedidoweb.modelo.Cliente[ idcliente=" + idcliente + " ]";
     }
 
-    public List<Ordenpedido> getOrdenpedidoList() {
+    public List<OrdenpedidoDTO> getOrdenpedidoList() {
         return ordenpedidoList;
     }
 
-    public void setOrdenpedidoList(List<Ordenpedido> ordenpedidoList) {
+    public void setOrdenpedidoList(List<OrdenpedidoDTO> ordenpedidoList) {
         this.ordenpedidoList = ordenpedidoList;
     }
     
