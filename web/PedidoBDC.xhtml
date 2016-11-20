@@ -17,11 +17,13 @@
                             action="#{pedidoWEb.limpiarPedido()}"
                             icon="ui-icon-plus" />
                <p:menuitem value="Guardar" 
+                           update="forprincipal" 
+                           rendered="#{pedidoWEb.guardar}"
                            action="#{pedidoWEb.guardarPedido()}"
                             icon="ui-icon-disk" />
                 <p:menuitem value="Monitor"
-                            action="#{pedidoWEb.mostrarProducto()}"
-                            
+                            update="forprincipal" 
+                            action="#{pedidoWEb.mostrarBuscar()}"                
                             icon=" ui-icon-search" />
             </p:menubar>
                     <h:panelGrid columns="4" width="80%">
@@ -47,7 +49,7 @@
                          
                          
                     </h:panelGrid>
-            <h:panelGrid columns="8" width="100%"  style="background: #C0BEBE">
+            <h:panelGrid rendered="#{pedidoWEb.guardar}" columns="8" width="100%"  style="background: #C0BEBE">
                           <h:outputLabel  value="Cantidad "  />
                           <p:inputText  value="#{pedidoWEb.cantidadSolic}" />
                          <h:outputLabel  value="Producto "  />
@@ -61,7 +63,7 @@
                         <h:outputLabel  value="medida "  />
                         <p:inputText value="#{pedidoWEb.medida}" readonly="true"  />
                         <h:outputLabel  value="Agregar "  />
-                           <p:commandButton  
+                           <p:commandButton  rendered="#{pedidoWEb.guardar}"
                                id="iconOnlya" action="#{pedidoWEb.agreaLinea()}" update="forprincipal"
                                            icon="ui-icon-circle-arrow-e" title="Icon Only" />
                 </h:panelGrid>
@@ -115,6 +117,66 @@
                     </p:dataTable>
                 </h:panelGrid>
             </p:dialog>
+      <p:dialog id="dMonitorPedido" widgetVar="monitorPedido" header="Monitor de pedidos" 
+                          width="80%" minWidth="25">
+                    <p:panel id="pMonitorFact" >
+                        <p:menubar id="menuMonitorPedido" >
+                            <p:menuitem id="idBuscarPed" value="Buscar Pedido" 
+                                                                               
+                                        icon="ui-icon-search"  > 
+                            </p:menuitem>
+                        </p:menubar>
+
+                        <h:panelGrid columns="4" width="100%" >
+                            <h:outputLabel value ="Fecha inicio:"/>
+                            <p:calendar id="dtpFechaIni" />
+                            <h:outputLabel value ="Fecha fin:"/>
+                            <p:calendar id="dtpFechaFin" />
+                        </h:panelGrid>
+
+                        <p:panel id="tabla">
+                            <p:dataTable id="dtPedido" emptyMessage=""
+                                         
+                                         var="op"
+                                         paginator="true" selectionMode="single"
+                                         rows="10">                           
+                                <p:ajax event="rowSelect"   update=":forprincipal"
+                                        process="@all" />
+                                <p:column headerText="No. Pedido" >
+                                    <h:outputText />
+                                </p:column>                                             
+                                <p:column headerText="Sucursal" 
+                                           filterStyle="width:80%" >
+                                    <h:outputText />
+                                </p:column>             
+                                <p:column headerText="Nombre Cliente"
+                                          filterStyle="width:80%" >
+                                    <h:outputText  />
+                                </p:column>  
+                                <p:column headerText="Apellido cliente"
+                                       filterStyle="width:80%" >
+                                    <h:outputText />
+                                </p:column>    
+                                <p:column headerText="Estado" 
+                                          filterStyle="width:80%" >
+                                    <h:outputText />
+                                </p:column>             
+                                <p:column headerText="Fecha de pedido" >
+                                    <h:outputText >
+                                        <f:convertDateTime pattern="dd/MM/yyyy" />
+                                    </h:outputText>
+                                </p:column>      
+                                <f:facet name="footer">
+                                    <h:commandLink>
+                                        <p:graphicImage value="/images/excel.png" width="18"/>
+                                        <p:dataExporter type="xls" target="dtPedido" fileName="Pedidos" />
+                                    </h:commandLink>
+                                </f:facet>
+                            </p:dataTable>
+
+                        </p:panel>
+                    </p:panel>
+                </p:dialog>
      </p:panel>
         </h:form>
     </h:body>

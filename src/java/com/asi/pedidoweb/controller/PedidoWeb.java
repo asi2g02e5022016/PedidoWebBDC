@@ -13,7 +13,6 @@ import com.asi.pedidoweb.modelo.Medida;
 import com.asi.pedidoweb.modelo.OrdenpedidoDTO;
 import com.asi.pedidoweb.modelo.OrdenpedidodetalleDTO;
 import com.asi.pedidoweb.modelo.Producto;
-import com.asi.pedidoweb.modelo.ReponseWs;
 import com.asi.pedidoweb.modelo.Sucursal;
 import com.asi.pedidoweb.modelo.Vwproductos;
 import com.asi.pedidoweb.negocio.ConsumerWSLocal;
@@ -21,13 +20,7 @@ import com.asi.pedidoweb.negocio.GestorEmailLocal;
 import com.asi.pedidoweb.negocio.ProcesosVentasLocal;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 import java.io.Serializable;
-import java.net.ConnectException;
-import java.net.NoRouteToHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import javax.inject.Inject;
@@ -44,7 +37,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
-import sun.security.krb5.internal.crypto.crc32;
 
 /**
  *
@@ -79,8 +71,11 @@ public class PedidoWeb implements Serializable{
      private String estado;
      private String medida;
      private Date fecha;
+      private Date fechaInicial;
+       private Date fechaFinal;
      private OrdenpedidoDTO oderPedido;
      private Map sucMap = new HashMap();
+     private boolean  guardar;
      
 
     /**
@@ -135,11 +130,38 @@ public class PedidoWeb implements Serializable{
         requestContext.execute("PF('dialogoProducto').show();");
     }
 
-    public void mostrarProducto() {
+    public void mostrarBuscar() {
+         guardar = false;
         RequestContext requestContext = RequestContext.getCurrentInstance();
-        requestContext.execute("PF('dialogoProducto').show();");
+        requestContext.execute("PF('monitorPedido').show();");
     }
 
+    public void buscarOrdenPedido() {
+        try {
+                if (fechaInicial != null && fechaFinal != null) {
+                    if (fechaInicial.after(fechaFinal)) {
+                        alert("La fecha inicial tiene que ser menor que la final.",
+                                FacesMessage.SEVERITY_WARN);
+                        return;
+                    }
+                } 
+            
+
+            Sucursal suc = new Sucursal();
+//            suc.setIdsucursal(s);
+//            Utilidades uti = new Utilidades();
+//            sucursal = suc.getSucursal();
+//            fechaFin = uti.getFiltroDeFecha(fechaFin, 1);
+//            lstOrdenPedido = ejbBuscarPedido.buscarOrdenPedido(suc, fechaIni, fechaFin);
+//            if (lstOrdenPedido == null || lstOrdenPedido.isEmpty()) {
+//                alert("No se encontrarón resultados.", FacesMessage.SEVERITY_FATAL);
+//            }
+        } catch (Exception ex) {
+            Logger.getLogger(PedidoWeb.class.getName()).log(
+                    Level.SEVERE, null, ex);
+            alert(ex.getMessage(), FacesMessage.SEVERITY_FATAL);
+        }
+    }
     public void buscarProducto() {
         try {
 
@@ -251,7 +273,10 @@ public class PedidoWeb implements Serializable{
             lstDetalle.add(0, pedidoDet);
             
     }
-      public void limpiarPedido() {
+    /**
+     * 
+     */
+    public void limpiarPedido() {
           lstDetalle = null;
           lstProducto = null;
           this.cantidadSolic =  null;
@@ -261,7 +286,12 @@ public class PedidoWeb implements Serializable{
           this.fecha = null;
            this.idCliente = null;
            this.medida =  null;
+           guardar = true;
       }
+    /**
+     * 
+     * @throws Exception 
+     */
     public void guardarPedido() throws Exception {
         if (codsucursal == 0) {
             alert("Debe selecionar una sucursal.", FacesMessage.SEVERITY_WARN);
@@ -298,6 +328,7 @@ public class PedidoWeb implements Serializable{
               Logger.getLogger(PedidoWeb.class.getName()).log(Level.INFO,
                       "la sucursal no tiene asignado correo ");   
               }
+              guardar = false;
         } catch (Exception e) {
            Logger.getLogger(PedidoWeb.class.getName()).log(
                     Level.SEVERE, null, e.getMessage());
@@ -416,6 +447,15 @@ public class PedidoWeb implements Serializable{
         this.descripCliente = descripCliente;
     }
 
+    public boolean isGuardar() {
+        return guardar;
+    }
+
+    public void setGuardar(boolean guardar) {
+        this.guardar = guardar;
+    }
+
+    
     public static < T> T getParemetro(Object object, Map filtros) {
         if (filtros == null || object == null) {
             return null;
