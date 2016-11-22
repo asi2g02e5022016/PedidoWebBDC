@@ -17,7 +17,7 @@
                             action="#{pedidoWEb.limpiarPedido()}"
                             icon="ui-icon-plus" />
                <p:menuitem value="Guardar" 
-                           update="forprincipal" 
+                         
                            rendered="#{pedidoWEb.guardar}"
                            action="#{pedidoWEb.guardarPedido()}"
                             icon="ui-icon-disk" />
@@ -69,7 +69,7 @@
                 </h:panelGrid>
             <p:dataGrid var="car"  columns="3" layout="grid"
                         
-                        rows="12" paginator="true" id="cars"
+                        rows="12" paginator="true" id="cars"    
                         value="#{pedidoWEb.lstDetalle}"
                         emptyMessage="">
 
@@ -78,7 +78,8 @@
                         <p:graphicImage /> 
 
                         <h:outputText value="#{car.idproducto.producto}"/>
-
+                        <h:outputText value="#{car.precio}"/>
+                        <h:outputText value="#{car.cantidadconfirmada}"/>
                       
                         
                     </h:panelGrid>
@@ -122,47 +123,33 @@
                     <p:panel id="pMonitorFact" >
                         <p:menubar id="menuMonitorPedido" >
                             <p:menuitem id="idBuscarPed" value="Buscar Pedido" 
-                                                                               
+                                         update="dtPedido"
+                                        action="#{pedidoWEb.buscarOrdenPedido()}"                               
                                         icon="ui-icon-search"  > 
                             </p:menuitem>
                         </p:menubar>
 
                         <h:panelGrid columns="4" width="100%" >
                             <h:outputLabel value ="Fecha inicio:"/>
-                            <p:calendar id="dtpFechaIni" />
+                            <p:calendar id="dtpFechaIni" value="#{pedidoWEb.fechaInicial}" />
                             <h:outputLabel value ="Fecha fin:"/>
-                            <p:calendar id="dtpFechaFin" />
+                            <p:calendar id="dtpFechaFin" value="#{pedidoWEb.fechaFinal}"  />
                         </h:panelGrid>
 
                         <p:panel id="tabla">
                             <p:dataTable id="dtPedido" emptyMessage=""
-                                         
+                                         value="#{pedidoWEb.lstedidos}"
                                          var="op"
-                                         paginator="true" selectionMode="single"
+                                         paginator="true" 
                                          rows="10">                           
                                 <p:ajax event="rowSelect"   update=":forprincipal"
                                         process="@all" />
                                 <p:column headerText="No. Pedido" >
-                                    <h:outputText />
-                                </p:column>                                             
-                                <p:column headerText="Sucursal" 
-                                           filterStyle="width:80%" >
-                                    <h:outputText />
+                                    <h:outputText value="#{op.ordenpedidoPK.idordenpedido}" />
                                 </p:column>             
-                                <p:column headerText="Nombre Cliente"
-                                          filterStyle="width:80%" >
-                                    <h:outputText  />
-                                </p:column>  
-                                <p:column headerText="Apellido cliente"
-                                       filterStyle="width:80%" >
-                                    <h:outputText />
-                                </p:column>    
-                                <p:column headerText="Estado" 
-                                          filterStyle="width:80%" >
-                                    <h:outputText />
-                                </p:column>             
+                          
                                 <p:column headerText="Fecha de pedido" >
-                                    <h:outputText >
+                                    <h:outputText value="#{op.fechapedido}"  >
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </h:outputText>
                                 </p:column>      
@@ -181,4 +168,5 @@
         </h:form>
     </h:body>
 </html>
+
 
