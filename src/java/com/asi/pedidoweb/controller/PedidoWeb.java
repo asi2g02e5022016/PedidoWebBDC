@@ -64,6 +64,7 @@ public class PedidoWeb implements Serializable{
     private String URLBASE = null;
     private List< Vwproductos> lstProducto = new ArrayList<>();
      private List<OrdenpedidodetalleDTO> lstDetalle;
+     private List<OrdenpedidoDTO> lstedidos;
      private Double cantidadSolic;
      private Integer idCliente;
      private Cliente cliente;
@@ -138,6 +139,7 @@ public class PedidoWeb implements Serializable{
 
     public void buscarOrdenPedido() {
         try {
+            
                 if (fechaInicial != null && fechaFinal != null) {
                     if (fechaInicial.after(fechaFinal)) {
                         alert("La fecha inicial tiene que ser menor que la final.",
@@ -148,14 +150,24 @@ public class PedidoWeb implements Serializable{
             
 
             Sucursal suc = new Sucursal();
-//            suc.setIdsucursal(s);
-//            Utilidades uti = new Utilidades();
-//            sucursal = suc.getSucursal();
-//            fechaFin = uti.getFiltroDeFecha(fechaFin, 1);
-//            lstOrdenPedido = ejbBuscarPedido.buscarOrdenPedido(suc, fechaIni, fechaFin);
-//            if (lstOrdenPedido == null || lstOrdenPedido.isEmpty()) {
-//                alert("No se encontrarón resultados.", FacesMessage.SEVERITY_FATAL);
-//            }
+            suc.setIdsucursal(codsucursal);
+            
+    Map filtros = new HashMap();
+    filtros.put("fechaInicial" ,fechaInicial);
+    filtros.put("fechaFinal" ,fechaFinal);
+        filtros.put("idsucursal" , String.valueOf(codsucursal));
+     String jsonDatos = new Gson().toJson(filtros);
+       String jsonRetur = this.consumerWS.consumirWebservices(
+                    sesion.getUserCliente(),jsonDatos, 
+                    URLBASE + "ConsultaPedidosWS");
+      lstedidos = new Gson().fromJson(jsonRetur,
+                    new TypeToken<ArrayList<OrdenpedidoDTO>>() {
+            }.getType());
+      if (lstedidos == null || lstedidos.isEmpty()) {
+          alert("No se encontraron resultados.", FacesMessage.SEVERITY_INFO);
+          return;
+      }
+          System.out.println("suc.getEmail() .,... " +suc.getEmail() );
         } catch (Exception ex) {
             Logger.getLogger(PedidoWeb.class.getName()).log(
                     Level.SEVERE, null, ex);
@@ -303,9 +315,9 @@ public class PedidoWeb implements Serializable{
        suc.setIdsucursal(codsucursal);
        suc.setEmail(email);
         oderPedido =  new OrdenpedidoDTO();
-        this.oderPedido.setSucursal(suc);
+//        this.oderPedido.setSucursal(suc);
         this.oderPedido.setFechapedido(new Date());
-        this.oderPedido.setIdcliente(sesion.getCliente());
+//        this.oderPedido.setIdcliente(sesion.getCliente());
         oderPedido.setOrdenpedidodetalleList(lstDetalle);
 //        this.set.setIdcliente(cliente);
 
@@ -449,6 +461,30 @@ public class PedidoWeb implements Serializable{
 
     public boolean isGuardar() {
         return guardar;
+    }
+
+    public Date getFechaInicial() {
+        return fechaInicial;
+    }
+
+    public void setFechaInicial(Date fechaInicial) {
+        this.fechaInicial = fechaInicial;
+    }
+
+    public Date getFechaFinal() {
+        return fechaFinal;
+    }
+
+    public void setFechaFinal(Date fechaFinal) {
+        this.fechaFinal = fechaFinal;
+    }
+
+    public List<OrdenpedidoDTO> getLstedidos() {
+        return lstedidos;
+    }
+
+    public void setLstedidos(List<OrdenpedidoDTO> lstedidos) {
+        this.lstedidos = lstedidos;
     }
 
     public void setGuardar(boolean guardar) {
