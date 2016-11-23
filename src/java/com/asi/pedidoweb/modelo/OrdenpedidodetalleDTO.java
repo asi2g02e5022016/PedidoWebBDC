@@ -21,7 +21,8 @@ public class OrdenpedidodetalleDTO implements Serializable {
     private Double precio;
     private Double costo;
     private Double iva;
-    private Producto idproducto;
+    private Integer idproducto;
+      private String producto;
     private OrdenpedidoDTO ordenpedido;
     private Double monto;
     private Double total;
@@ -95,14 +96,16 @@ public class OrdenpedidodetalleDTO implements Serializable {
         this.iva = iva;
     }
 
-
-    public Producto getIdproducto() {
+    public Integer getIdproducto() {
         return idproducto;
     }
 
-    public void setIdproducto(Producto idproducto) {
+    public void setIdproducto(Integer idproducto) {
         this.idproducto = idproducto;
     }
+
+
+
 
     public OrdenpedidoDTO getOrdenpedido() {
         return ordenpedido;
@@ -126,6 +129,14 @@ public class OrdenpedidodetalleDTO implements Serializable {
 
     public void setTotal(Double total) {
         this.total = total;
+    }
+
+    public String getProducto() {
+        return producto;
+    }
+
+    public void setProducto(String producto) {
+        this.producto = producto;
     }
 
     @Override
