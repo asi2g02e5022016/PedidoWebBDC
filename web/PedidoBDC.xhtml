@@ -42,9 +42,7 @@
                          <p:inputText readonly="true"  value="#{pedidoWEb.fecha}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                         </p:inputText>  
-                     
-                        <h:outputLabel  value="Estado "  />
-                        <p:inputText  readonly="true" value="#{pedidoWEb.estado}" />   
+                      
                             
                          
                          
@@ -77,9 +75,9 @@
                     <h:panelGrid columns="1" id="iddet" style="width:100%">
                         <p:graphicImage /> 
 
-                        <h:outputText value="#{car.idproducto.producto}"/>
-                        <h:outputText value="#{car.precio}"/>
-                        <h:outputText value="#{car.cantidadconfirmada}"/>
+                        <h:outputText value="#{car.producto}"/>
+                        <h:outputText value="Precio  #{car.precio}" style="text-align: right"/>
+                        <h:outputText value="Cantidad  #{car.cantidadconfirmada}"  style="text-align: right"/>
                       
                         
                     </h:panelGrid>
@@ -105,7 +103,7 @@
                                  value="#{pedidoWEb.lstProducto}"
                                  var="dpro"    
                                  rowKey="#{dpro.idproducto}"
-                                 selectionMode="single" rows="10"  >                        
+                                 selectionMode="single" rows="7"  >                        
                         <p:ajax event="rowSelect" listener="#{pedidoWEb.onRowSelect}"
                                 update="forprincipal" process="@all"  
                            />
@@ -140,25 +138,23 @@
                             <p:dataTable id="dtPedido" emptyMessage=""
                                          value="#{pedidoWEb.lstedidos}"
                                          var="op"
+                                       selectionMode="single" 
                                          paginator="true" 
-                                         rows="10">                           
-                                <p:ajax event="rowSelect"   update=":forprincipal"
-                                        process="@all" />
+                                         rowKey="#{op.ordenpedidoPK}"
+                                         rows="7">                           
+                                <p:ajax event="rowSelect"   update="forprincipal"
+                                        process="@all" listener="#{pedidoWEb.onRowSelectMon}" />
                                 <p:column headerText="No. Pedido" >
                                     <h:outputText value="#{op.ordenpedidoPK.idordenpedido}" />
                                 </p:column>             
-                          
+                              <p:column headerText="cliente" >
+                                  <h:outputText value="#{op.cliente}" />
+                                </p:column>   
                                 <p:column headerText="Fecha de pedido" >
                                     <h:outputText value="#{op.fechapedido}"  >
                                         <f:convertDateTime pattern="dd/MM/yyyy" />
                                     </h:outputText>
                                 </p:column>      
-                                <f:facet name="footer">
-                                    <h:commandLink>
-                                        <p:graphicImage value="/images/excel.png" width="18"/>
-                                        <p:dataExporter type="xls" target="dtPedido" fileName="Pedidos" />
-                                    </h:commandLink>
-                                </f:facet>
                             </p:dataTable>
 
                         </p:panel>
@@ -168,5 +164,6 @@
         </h:form>
     </h:body>
 </html>
+
 
 
