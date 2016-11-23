@@ -66,8 +66,8 @@ public class PedidoWeb implements Serializable{
      private List<OrdenpedidodetalleDTO> lstDetalle;
      private List<OrdenpedidoDTO> lstedidos;
      private Double cantidadSolic;
+        private Double total;
      private Integer idCliente;
-     private Cliente cliente;
      private String descripCliente;
      private String estado;
      private String medida;
@@ -259,7 +259,29 @@ public class PedidoWeb implements Serializable{
         }
         
     }
-    
+        public void onRowSelectMon(SelectEvent event) {
+        try {
+            OrdenpedidoDTO idP  =  ((OrdenpedidoDTO) event.getObject());
+            System.out.println("idP.."+idP);
+            lstDetalle  =  new ArrayList<>();
+            if (idP.getOrdenpedidodetalleList() != null 
+                    && !idP.getOrdenpedidodetalleList().isEmpty()) {
+          lstDetalle.addAll(idP.getOrdenpedidodetalleList() );
+                
+            }
+          //  codsucursal = idP.getSucursal();
+            fecha  = idP.getFechapedido();
+            
+            RequestContext requestContext = RequestContext.getCurrentInstance();
+                requestContext.execute("PF('monitorPedido').hide();");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            Logger.getLogger(PedidoWeb.class.getName())
+                    .log(Level.SEVERE, null, ex);
+            alert(ex.getMessage(), FacesMessage.SEVERITY_ERROR);
+        }
+        
+    }
     public  void agreaLinea() {
           if (cantidadSolic == null || cantidadSolic.toString().equals("0")){
                 alert("La Cantidad Es obligatorio", FacesMessage.SEVERITY_WARN);         
@@ -274,7 +296,8 @@ public class PedidoWeb implements Serializable{
                 lstDetalle = new ArrayList<>();
             }
             OrdenpedidodetalleDTO pedidoDet = new OrdenpedidodetalleDTO();
-            pedidoDet.setIdproducto(product);
+            pedidoDet.setIdproducto(product.getIdproducto());
+              pedidoDet.setProducto(product.getProducto());
             pedidoDet.setCantidadconfirmada(cantidadSolic);
             pedidoDet.setCantidadsolicitada(cantidadSolic);
             pedidoDet.setPrecio(product.getPrecioventa());
@@ -292,7 +315,6 @@ public class PedidoWeb implements Serializable{
           lstDetalle = null;
           lstProducto = null;
           this.cantidadSolic =  null;
-          this.cliente = null;
           this.descripcionProducto = null;
           this.estado = null;
           this.fecha = null;
@@ -315,11 +337,14 @@ public class PedidoWeb implements Serializable{
        suc.setIdsucursal(codsucursal);
        suc.setEmail(email);
         oderPedido =  new OrdenpedidoDTO();
-//        this.oderPedido.setSucursal(suc);
+
         this.oderPedido.setFechapedido(new Date());
-//        this.oderPedido.setIdcliente(sesion.getCliente());
+           this.oderPedido.setIdcliente(sesion.getCliente().getIdcliente());
+        this.oderPedido.setIdestado(Integer.parseInt("10"));
+        this.oderPedido.setIdusuario(sesion.getUserCliente());
+        this.oderPedido.setSucursal(codsucursal);
         oderPedido.setOrdenpedidodetalleList(lstDetalle);
-//        this.set.setIdcliente(cliente);
+   
 
 
     String jsonDatos = new Gson().toJson(oderPedido);
