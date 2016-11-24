@@ -18,6 +18,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -59,6 +60,8 @@ public class Sucursal implements Serializable {
     @Size(min = 1, max = 9)
     @Column(name = "telefono")
     private String telefono;
+         @Transient
+    private Double iva;
 
     public Sucursal() {
     }
@@ -139,6 +142,16 @@ public class Sucursal implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Double getIva() {
+        return iva;
+    }
+
+    public void setIva(Double iva) {
+        this.iva = iva;
+    }
+
+
 
 
 
