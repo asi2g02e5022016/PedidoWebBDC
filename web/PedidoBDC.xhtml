@@ -32,17 +32,32 @@
                         <p:inputText readonly="true" value="#{pedidoWEb.descripCliente}"    />
                      
                         
-                              <h:outputLabel  value="Sucursal:  "  />
-                        <p:selectOneMenu id="listSucursal"  value ="#{pedidoWEb.codsucursal}" >
-                            <f:selectItems value="#{pedidoWEb.lstSucursal}"
-                                           var="suc" itemLabel="#{suc.sucursal}" itemValue="#{suc.idsucursal}"/>                                       
-                        </p:selectOneMenu> 
-                        
+                        <h:outputLabel  value="Subtotal "  style="font-weight: bold" />
+                         <p:inputText readonly="true" value="#{pedidoWEb.subTotal}"    >
+                             <f:convertNumber minFractionDigits="2"/>
+                         </p:inputText>
+                     
+                     
                          <h:outputLabel  value="Fecha "  />
                          <p:inputText readonly="true"  value="#{pedidoWEb.fecha}">
                         <f:convertDateTime pattern="dd/MM/yyyy" />
                         </p:inputText>  
-                      
+                       <h:outputLabel  value="IVA " style="font-weight: bold" />
+                       <p:inputText readonly="true" value="#{pedidoWEb.iva}"    >
+                         <f:convertNumber minFractionDigits="2"/>
+                       </p:inputText>
+                     
+                              <h:outputLabel  value="Sucursal:  "  />
+                        <p:selectOneMenu id="listSucursal"  value ="#{pedidoWEb.codsucursal}" >
+                            <f:selectItems value="#{pedidoWEb.lstSucursal}"
+                                           var="suc" itemLabel="#{suc.sucursal}" itemValue="#{suc.idsucursal}"/>                                       
+                        </p:selectOneMenu>  
+                        <h:outputLabel  value="Total " style="font-weight: bold"  />
+                        <p:inputText readonly="true" value="#{pedidoWEb.total}"    >
+                          <f:convertNumber minFractionDigits="2"/>
+                        </p:inputText>
+                     
+                        
                             
                          
                          
@@ -66,7 +81,6 @@
                                            icon="ui-icon-circle-arrow-e" title="Icon Only" />
                 </h:panelGrid>
             <p:dataGrid var="car"  columns="3" layout="grid"
-                        
                         rows="12" paginator="true" id="cars"    
                         value="#{pedidoWEb.lstDetalle}"
                         emptyMessage="">
@@ -75,11 +89,16 @@
                     <h:panelGrid columns="1" id="iddet" style="width:100%">
                         <p:graphicImage /> 
 
-                        <h:outputText value="#{car.producto}"/>
-                        <h:outputText value="Precio  #{car.precio}" style="text-align: right"/>
+                        <h:outputText value="#{car.producto}" style="font-weight: bold"/>
+                        <h:outputText value="Precio Unit #{car.precioConIVA}" style="text-align: right">
+                            <f:convertNumber parent="000000.00" />
+                        </h:outputText>
                         <h:outputText value="Cantidad  #{car.cantidadconfirmada}"  style="text-align: right"/>
-                      
-                        
+                        <h:outputText value="Monto  #{car.total}"  style="text-align: right"/>
+             <p:commandLink update=":forprincipal:carDetail" oncomplete="PF('carDialog').show()" title="View Detail">
+                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                    <f:setPropertyActionListener value="#{car}"  target="#{pedidoWEb.idP}" />
+                </p:commandLink>
                     </h:panelGrid>
                 </p:panel>
 
@@ -100,6 +119,7 @@
                 <h:panelGrid >
                     <p:dataTable id="tablaProdd" 
                                  emptyMessage=""
+                                 paginator="true"
                                  value="#{pedidoWEb.lstProducto}"
                                  var="dpro"    
                                  rowKey="#{dpro.idproducto}"
@@ -107,11 +127,17 @@
                         <p:ajax event="rowSelect" listener="#{pedidoWEb.onRowSelect}"
                                 update="forprincipal" process="@all"  
                            />
-                        <p:column  headerText="Producto">
+                        <p:column  headerText="id" filterBy="#{dpro.idproducto}">
+                            <h:outputText  value="#{ dpro.idproducto}" />
+                        </p:column>
+                         <p:column  headerText="Descripcion" filterBy="#{dpro.producto}">
                             <h:outputText  value="#{ dpro.producto}" />
                         </p:column>
-                         <p:column  headerText="Descripcion">
-                            <h:outputText  value="#{ dpro.producto}" />
+                        <p:column  headerText="Precio" filterBy="#{dpro.preciocompra} ">
+                            <h:outputText  value="#{ dpro.preciocompra}" />
+                        </p:column>
+                        <p:column  headerText="grupo" filterBy="#{dpro.grupoproducto}">
+                            <h:outputText  value="#{ dpro.grupoproducto}" />
                         </p:column>
                     </p:dataTable>
                 </h:panelGrid>
@@ -160,6 +186,17 @@
                         </p:panel>
                     </p:panel>
                 </p:dialog>
+     <p:dialog header="Car Info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+        <p:outputPanel id="carDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{not empty pedidoWEb.idP}" columnClasses="label,value">
+             
+ 
+                <h:outputText value=":" />
+                <h:outputText value="#{pedidoWEb.idP.producto}" />
+ 
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
      </p:panel>
         </h:form>
     </h:body>

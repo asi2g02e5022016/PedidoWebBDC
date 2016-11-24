@@ -49,6 +49,7 @@ public class PedidoWeb implements Serializable{
 //    private Cru
     @EJB
     private ConsumerWSLocal consumerWS;
+     private Vwproductos idP;
 
     @EJB
     private ProcesosVentasLocal procesosVentas;
@@ -63,11 +64,14 @@ public class PedidoWeb implements Serializable{
     private String descripcionProducto;
     private String URLBASE = null;
     private List< Vwproductos> lstProducto = new ArrayList<>();
-     private List<OrdenpedidodetalleDTO> lstDetalle;
-     private List<OrdenpedidoDTO> lstedidos;
-     private Double cantidadSolic;
-        private Double total;
-     private Integer idCliente;
+    private List<OrdenpedidodetalleDTO> lstDetalle;
+    private List<OrdenpedidoDTO> lstedidos;
+    private Double cantidadSolic;
+    private Double subTotal;
+    private Double iva;
+    private Double total;
+     private Double PORCENTAJE;
+    private Integer idCliente;
      private String descripCliente;
      private String estado;
      private String medida;
@@ -102,6 +106,7 @@ public class PedidoWeb implements Serializable{
                 alert("No se encontro la configuracion de servidor",
                         FacesMessage.SEVERITY_INFO);
             }
+            
                       
             String jsonRetur = this.consumerWS.consumirWebservices(
                     sesion.getUserCliente(), "", 
@@ -118,7 +123,9 @@ public class PedidoWeb implements Serializable{
             sucMap = new HashMap();
             for (Sucursal sucursal : lstSucursal) {
                 sucMap.put(sucursal.getIdsucursal().toString(),sucursal.getEmail() );
+                PORCENTAJE = sucursal.getIva() /100;
             }
+            System.out.println("porcenyaje" + PORCENTAJE);
             fecha = new Date();
              descripCliente = sesion.getUserCliente();
         }catch (Exception e) {
@@ -181,8 +188,9 @@ public class PedidoWeb implements Serializable{
             if (descripcionProducto != null) {
                 filtro.put("producto", descripcionProducto.trim());
             }
-//            filtro.put("activo", 1);
-//            filtro.put("tipo", 1);
+            filtro.put("activo", 1);
+           filtro.put("tipo", 1);
+            filtro.put("vendible", 1);
             String json = new Gson().toJson(filtro);
             String jsonRetur = this.consumerWS.consumirWebservices(
                     sesion.getUserCliente(), json,
@@ -198,6 +206,11 @@ public class PedidoWeb implements Serializable{
             System.out.println("lstProducto.." + lstProducto);
             if (lstProducto == null || lstProducto.isEmpty()) {
                 alert("No se encontraron resultados.", FacesMessage.SEVERITY_INFO);
+            }
+            for (Vwproductos p : lstProducto) {
+                Double iv = p.getPrecioventa() * PORCENTAJE;
+                System.out.println("iv..."+iv);
+                p.setPreciocompra(iv + p.getPrecioventa());
             }
         } catch (Exception ex) {
             Logger.getLogger(PedidoWeb.class.getName()).log(
@@ -238,7 +251,7 @@ public class PedidoWeb implements Serializable{
     
     public void onRowSelect(SelectEvent event) {
         try {
-            Vwproductos idP  =  ((Vwproductos) event.getObject());
+             idP  =  ((Vwproductos) event.getObject());
 
            product = new Producto();
            Medida medi = new Medida();
@@ -251,6 +264,7 @@ public class PedidoWeb implements Serializable{
            descripcionProducto = product.getProducto();
             RequestContext requestContext = RequestContext.getCurrentInstance();
                 requestContext.execute("PF('dialogoProducto').hide();");
+           
         } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(PedidoWeb.class.getName())
@@ -297,16 +311,29 @@ public class PedidoWeb implements Serializable{
             }
             OrdenpedidodetalleDTO pedidoDet = new OrdenpedidodetalleDTO();
             pedidoDet.setIdproducto(product.getIdproducto());
-              pedidoDet.setProducto(product.getProducto());
+            pedidoDet.setProducto(idP.getProducto());
             pedidoDet.setCantidadconfirmada(cantidadSolic);
             pedidoDet.setCantidadsolicitada(cantidadSolic);
-            pedidoDet.setPrecio(product.getPrecioventa());
-            pedidoDet.setMonto(cantidadSolic * pedidoDet.getPrecio());
-            Double totaliva = pedidoDet.getMonto() * Double.valueOf("0.13");
+            pedidoDet.setPrecio(idP.getPrecioventa());
+            calcularLinea(pedidoDet);
+            lstDetalle.add(0, pedidoDet);
+            calcularTotales();
+                 cantidadSolic  = null;
+                descripcionProducto = null;
+                medida = null;
+                product = null;
+    }
+    
+    private OrdenpedidodetalleDTO calcularLinea(OrdenpedidodetalleDTO pedidoDet) {
+        System.out.println("[recionvemya.. " +pedidoDet.getPrecio());
+            Double ivaUni = pedidoDet.getPrecio() * PORCENTAJE;
+            pedidoDet.setPrecioConIVA(pedidoDet.getPrecio() + ivaUni);
+            pedidoDet.setMonto(pedidoDet.getCantidadconfirmada() * pedidoDet.getPrecio());
+            Double totaliva = pedidoDet.getMonto() * PORCENTAJE;
             pedidoDet.setIva(totaliva);
             pedidoDet.setTotal(totaliva + pedidoDet.getMonto());
-            lstDetalle.add(0, pedidoDet);
-            
+        
+        return  pedidoDet;
     }
     /**
      * 
@@ -321,6 +348,9 @@ public class PedidoWeb implements Serializable{
            this.idCliente = null;
            this.medida =  null;
            guardar = true;
+           subTotal = null;
+            iva = null;
+             total = null;
       }
     /**
      * 
@@ -371,6 +401,26 @@ public class PedidoWeb implements Serializable{
                     Level.SEVERE, null, e.getMessage());
         }
     }
+    public void eliminarDeta() {
+    
+    }
+    
+    private void calcularTotales(){
+         subTotal = Double.valueOf("0");
+          iva = Double.valueOf("0");
+        total = Double.valueOf("0");
+        if (lstDetalle != null && !lstDetalle.isEmpty()) {
+            for (OrdenpedidodetalleDTO d : lstDetalle) {
+                Double subT  = d.getPrecio() * d.getCantidadconfirmada();
+                Double iv = d.getIva();
+                Double tot = iv + subT;
+                subTotal = subTotal +subT;
+                iva = iva +iv;
+                total = total +tot;
+            }
+        }
+    }
+            
     public List<Vwproductos> getLstProducto() {
         return lstProducto;
     }
@@ -514,6 +564,38 @@ public class PedidoWeb implements Serializable{
 
     public void setGuardar(boolean guardar) {
         this.guardar = guardar;
+    }
+
+    public Double getSubTotal() {
+        return subTotal;
+    }
+
+    public void setSubTotal(Double subTotal) {
+        this.subTotal = subTotal;
+    }
+
+    public Vwproductos getIdP() {
+        return idP;
+    }
+
+    public void setIdP(Vwproductos idP) {
+        this.idP = idP;
+    }
+
+    public Double getIva() {
+        return iva;
+    }
+
+    public void setIva(Double iva) {
+        this.iva = iva;
+    }
+
+    public Double getTotal() {
+        return total;
+    }
+
+    public void setTotal(Double total) {
+        this.total = total;
     }
 
     
